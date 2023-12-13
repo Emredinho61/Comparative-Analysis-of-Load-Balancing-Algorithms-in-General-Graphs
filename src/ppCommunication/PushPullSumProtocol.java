@@ -6,6 +6,10 @@ import peersim.core.Linkable;
 import peersim.core.Network;
 import peersim.core.Node;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     protected double value;
@@ -18,16 +22,24 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     @Override
     public void nextCycle(Node node, int protocolID) {
-        int chosenNeighbor = CommonState.r.nextInt(Network.size());
 
-        PushPullSumProtocol nodeNeighbor = ((PushPullSumProtocol) Network.get(chosenNeighbor).getProtocol(protocolID));
+        try(PrintWriter writer = new PrintWriter(new FileWriter("terminalOutput.txt", true), false)){
+            int chosenNeighbor = CommonState.r.nextInt(Network.size());
 
-        double averageTemperature = (this.value + nodeNeighbor.value) / 2;
-        this.value =  averageTemperature;
-        nodeNeighbor.value = averageTemperature;
+            PushPullSumProtocol nodeNeighbor = ((PushPullSumProtocol) Network.get(chosenNeighbor).getProtocol(protocolID));
 
-        System.out.println("This \t" + this.hashCode() + " value \t" + this.value
-        +" - Neighbor \t" + nodeNeighbor.hashCode()  + " value \t" + nodeNeighbor.value + " Average = " + averageTemperature);
+            double averageTemperature = (this.value + nodeNeighbor.value) / 2;
+            this.value =  averageTemperature;
+            nodeNeighbor.value = averageTemperature;
+            String output = "This \t" + this.hashCode() + " value \t" + this.value
+                    +" - Neighbor \t" + nodeNeighbor.hashCode()  + " value \t" + nodeNeighbor.value + " Average = " + averageTemperature;
+
+            System.out.println(output);
+            writer.println(output);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
 
 
     }
