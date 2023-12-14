@@ -1,6 +1,8 @@
 package ppCommunication;
 
 import peersim.cdsim.CDProtocol;
+import peersim.config.Configuration;
+import peersim.config.FastConfig;
 import peersim.core.CommonState;
 import peersim.core.Linkable;
 import peersim.core.Network;
@@ -10,38 +12,77 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.Set;
+import java.util.HashSet;
+
 public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     protected double value;
 
-    public PushPullSumProtocol(String name)
-    {
+    private static final String PAR_PID = "protocol";
+    private static final String PAR_CYCLES = "cycles";
 
+    protected double sum;
+    protected double weight;
+    private Set<Node> receivedNodes = new HashSet<>();
+
+
+    public PushPullSumProtocol(String name) {
+        this.sum = 50.0;
+        this.weight = 1;
 
     }
 
     @Override
     public void nextCycle(Node node, int protocolID) {
 
-        try(PrintWriter writer = new PrintWriter(new FileWriter("terminalOutput.txt", true), false)){
-            int chosenNeighbor = CommonState.r.nextInt(Network.size());
+        int chosenNeighbor = CommonState.r.nextInt(Network.size());
 
-            PushPullSumProtocol nodeNeighbor = ((PushPullSumProtocol) Network.get(chosenNeighbor).getProtocol(protocolID));
+        PushPullSumProtocol nodeNeighbor = ((PushPullSumProtocol) Network.get(chosenNeighbor).getProtocol(protocolID));
+        sendRequestData(node, Network.get(chosenNeighbor), protocolID);
+        respondToRequests(node, protocolID);
 
-            double averageTemperature = (this.value + nodeNeighbor.value) / 2;
-            this.value =  averageTemperature;
-            nodeNeighbor.value = averageTemperature;
-            String output = "This \t" + this.hashCode() + " value \t" + this.value
-                    +" - Neighbor \t" + nodeNeighbor.hashCode()  + " value \t" + nodeNeighbor.value + " Average = " + averageTemperature;
 
-            System.out.println(output);
-            writer.println(output);
-        }catch (IOException e){
-            e.printStackTrace();
+        String output = "This \t" + this.hashCode() + " sum \t" + this.sum + " weight " + this.weight
+                + " - Neighbor \t" + nodeNeighbor.hashCode() + " sum \t" + nodeNeighbor.sum + " weight " +  nodeNeighbor.weight;
+
+        System.out.println(output);
+
+    }
+
+
+    private void receiveRequestData(double requestSum, double requestWeight) {
+        sum += requestSum;
+        weight += requestWeight;
+    }
+
+    private void sendRequestData(Node node, Node neighbor, int protocolID) {
+        PushPullSumProtocol neighborProtocol = (PushPullSumProtocol) neighbor.getProtocol(protocolID);
+        double requestSum = sum;
+        double requestWeight = weight;
+        neighborProtocol.receiveRequestData(requestSum, requestWeight);
+        receivedNodes.add(node);
+    }
+
+    private void receiveResponseData(double replySum, double replyWeight) {
+        sum += replySum;
+        weight += replyWeight;
+    }
+
+    private void respondToRequests(Node node, int protocolID) {
+        for (Node callerNode : receivedNodes) {
+            PushPullSumProtocol callerProtocol = (PushPullSumProtocol) callerNode.getProtocol(protocolID);
+            double replySum = sum / 2;
+            double replyWeight = sum / 2;
+            callerProtocol.receiveResponseData(replySum, replyWeight);
+
+            sum = sum / 2;
+            weight = weight / 2;
         }
+    }
 
-
-
+    private void aggregateData(Node node) {
+        // TODO: Write an average function
     }
 
     @Override
@@ -80,9 +121,11 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
         try {
 
-            node = (PushPullSumProtocol)super.clone();
-        }
-        catch( CloneNotSupportedException e ) { e.printStackTrace(); } // never happens
+            node = (PushPullSumProtocol) super.clone();
+            node.receivedNodes = new HashSet<>();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        } // never happens
 
         return node;
     }
