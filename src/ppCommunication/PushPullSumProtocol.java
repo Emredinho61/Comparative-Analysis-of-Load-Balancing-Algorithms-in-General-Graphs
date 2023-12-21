@@ -19,7 +19,7 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
     protected double sum;
     protected double weight;
     protected double average = 0;
-    protected Set<TupleContainer> messages;
+    protected Set<TupleContainer> messages = new HashSet<>();
     private Set<Node> receivedNodes = new HashSet<>();
 
 
@@ -37,9 +37,9 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
         // We don't want nodes to interact with themselves so we exclude this case when aggregating
         if (nodeNeighbor != node.getProtocol(protocolID)) {
-            aggregateData();
-            sendRequestData(node, Network.get(chosenNeighbor), protocolID);
-            respondToRequests(node, protocolID);
+            // aggregateData();
+            // sendRequestData(node, Network.get(chosenNeighbor), protocolID);
+            // respondToRequests(node, protocolID);
 
             // we output hashcode, sum, weight from node and neighbornode
             String output = "This \t" + this.hashCode() + " sum \t" + this.sum + " weight " + this.weight
@@ -50,96 +50,6 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     }
 
-
-    private void receiveRequestData(double requestSum, double requestWeight) {
-        /*
-        Helper Method for RequestData.
-         */
-        // when receiving the Request data we just want to add the requested data to our sum
-        sum += requestSum;
-        weight += requestWeight;
-    }
-
-    private void sendRequestData(Node node, Node neighbor, int protocolID) {
-        /*
-        Procedure RequestData of the pseudocode in the Paper "Adding Pull to Push Sum for Approximate Data Aggregation"
-         */
-        PushPullSumProtocol neighborProtocol = (PushPullSumProtocol) neighbor.getProtocol(protocolID);
-        double requestSum = sum / 2;
-        double requestWeight = weight / 2;
-
-        // send sum / 2 and weight / 2  to the random chosen node
-        neighborProtocol.receiveRequestData(requestSum, requestWeight);
-
-        // by sending the half of our sum and weights to the chosen nodes we only have half of it remaining so
-        // we do not send it but just half it.
-        sum = requestSum;
-        weight = requestWeight;
-
-        // set of nodes that are calling our node u at round t
-        receivedNodes.add(node);
-
-        // we also add the tuple of our new sums and weights to the set of messages
-        messages.add(new TupleContainer(requestSum, requestWeight));
-    }
-
-    private void receiveResponseData(double replySum, double replyWeight) {
-        /*
-        Helper Method for ResponseData.
-         */
-        // same as receiveRequestData
-        sum += replySum;
-        weight += replyWeight;
-    }
-
-    private void respondToRequests(Node node, int protocolID) {
-        /*
-        Procedure ResponseData of the pseudocode in the Paper "Adding Pull to Push Sum for Approximate Data Aggregation"
-         */
-        // we compute ((sum / 2) / |size of receivedNodes|) and ((weight / 2) / |size of receivedNodes|)9
-        double replySum = (sum / 2) / receivedNodes.size();
-        double replyWeight = (weight / 2) / receivedNodes.size();
-        // for all the nodes in the calling Node set we do:
-        for (Node callerNode : receivedNodes) {
-            PushPullSumProtocol callerProtocol = (PushPullSumProtocol) callerNode.getProtocol(protocolID);
-            // and send this info to the caller Node as a "reply"
-            callerProtocol.receiveResponseData(replySum, replyWeight);
-        }
-    }
-
-    private double calculateSumofSum() {
-        /*
-        A method that computes the Sum of all sums in the Set of tuples messages
-        A Helper method for Aggregate
-         */
-        double sumOfSums = 0;
-        for (TupleContainer oneTupleContainer : messages) {
-            sumOfSums += oneTupleContainer.getSum();
-        }
-        return sumOfSums;
-    }
-
-    private double calculateSumofWeights() {
-        /*
-        A method that computes the Sum of all weights in the Set of tuples messages.
-        A Helper method for Aggregate
-         */
-        double sumOfWeights = 0;
-        for (TupleContainer oneTupleContainer : messages) {
-            sumOfWeights += oneTupleContainer.getWeight();
-        }
-        return sumOfWeights;
-    }
-
-    private void aggregateData() {
-        /*
-        Procedure Aggregate of the Paper "Adding Pull to Push Sum for Approximate Data Aggregation"
-         */
-        double sumOfSumMessages = calculateSumofSum();
-        double sumOfWeightMessages = calculateSumofWeights();
-        // set the average which is defined as s_u/w_u at time t
-        average = sumOfSumMessages / sumOfWeightMessages;
-    }
 
     @Override
     public int degree() {
@@ -203,6 +113,11 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
         this.sum = sum;
     }
 
+    public void addSum(double value) {
+        this.value += value;
+    }
+
+
     public double getWeight() {
         return weight;
     }
@@ -211,12 +126,16 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
         this.weight = weight;
     }
 
+    public void addWeight(double weight) {
+        this.weight += weight;
+    }
+
     public Set<TupleContainer> getMessage() {
         return messages;
     }
 
-    public void setMessages(Set<TupleContainer> messages) {
-        this.messages = messages;
+    public void setMessages(TupleContainer messages) {
+        this.messages.add(messages);
     }
 
     public double getAverage() {
@@ -226,4 +145,13 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
     public void setAverage(double average) {
         this.average = average;
     }
+
+    public Set<Node> getReceivedNodes() {
+        return this.receivedNodes;
+    }
+
+    public void addReceivedNode(Node node) {
+        this.receivedNodes.add(node);
+    }
+
 }
