@@ -1,4 +1,4 @@
-package ppCommunication;
+package pushPullSum;
 
 public class TupleContainer {
     protected double sum;

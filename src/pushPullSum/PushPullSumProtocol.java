@@ -1,9 +1,7 @@
-package ppCommunication;
+package pushPullSum;
 
 import peersim.cdsim.CDProtocol;
-import peersim.core.CommonState;
 import peersim.core.Linkable;
-import peersim.core.Network;
 import peersim.core.Node;
 
 import java.util.Set;

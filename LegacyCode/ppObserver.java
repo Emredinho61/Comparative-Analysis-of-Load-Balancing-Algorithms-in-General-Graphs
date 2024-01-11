@@ -1,4 +1,4 @@
-package ppCommunication;
+package pushPullSum;
 
 import peersim.config.Configuration;
 import peersim.core.CommonState;
