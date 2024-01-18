@@ -9,10 +9,13 @@ import java.util.*;
 
 public class dealAgreementBasedObserver implements Control {
     private static final String PAR_PROT = "protocol";
+    private static final String PAR_K = "rnd.k";
     private final int pid;
+    private final int k;
 
     public dealAgreementBasedObserver(String name) {
         pid = Configuration.getPid(name + "." + PAR_PROT);
+        k = Configuration.getInt(name + "." +PAR_K);
     }
 
     @Override
@@ -76,9 +79,9 @@ public class dealAgreementBasedObserver implements Control {
         // Get the protocol implementing the Linkable interface
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(protocolID);
 
-        for (int i = 1; i <= CommonState.r.nextInt(Network.size()); i++) {
+        for (int i = k; i <= CommonState.r.nextInt(Network.size()); i++) {
             Node neighbor = Network.get(i);
-            nodeProtocol.addNewNeighbors(neighbor);
+            nodeProtocol.addNeighbor(neighbor);
         }
     }
 
@@ -88,7 +91,8 @@ public class dealAgreementBasedObserver implements Control {
         double minLoad = Double.MAX_VALUE;
         Node minLoadNeighbor = null;
 
-        for (Node neighbor : nodeProtocol.getNeighbors()) {
+        for (int i = 0; i < nodeProtocol.degree(); i++) {
+            Node neighbor = nodeProtocol.getNeighbor(i);
             dealAgreementBasedProtocol neighborProtocol = (dealAgreementBasedProtocol) neighbor.getProtocol(pid);
 
             if (neighborProtocol.getLoad() < minLoad) {
@@ -115,14 +119,6 @@ public class dealAgreementBasedObserver implements Control {
             }
         }
         return maxProposingNode;
-    }
-
-    private void agreeOnDeal(Node proposedNode, Node proposingNode, int protocolID) {
-        dealAgreementBasedProtocol proposedNodeProtocol = (dealAgreementBasedProtocol) proposedNode.getProtocol(protocolID);
-        dealAgreementBasedProtocol proposingNodeProtocol = (dealAgreementBasedProtocol) proposingNode.getProtocol(protocolID);
-        double transferValue = proposingNodeProtocol.getTransferProposal();
-        proposedNodeProtocol.addLoad(transferValue);
-        proposingNodeProtocol.subtractLoad(transferValue);
     }
 
     private void updateLoadAfterDeal(Node receivingNode, Node sendingNode, int protocolID) {

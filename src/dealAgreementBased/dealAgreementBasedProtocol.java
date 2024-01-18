@@ -1,6 +1,7 @@
 package dealAgreementBased;
 
 import peersim.cdsim.CDProtocol;
+import peersim.config.FastConfig;
 import peersim.core.CommonState;
 import peersim.core.Linkable;
 import peersim.core.Network;
@@ -27,27 +28,35 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
 
     @Override
     public void nextCycle(Node node, int protocolID) {
-        /*
-        int chosenNeighbor = CommonState.r.nextInt(Network.size());
-        dealAgreementBasedProtocol nodeNeighbor = ((dealAgreementBasedProtocol) Network.get(chosenNeighbor).getProtocol(protocolID));
-        System.out.println("This \t" + this.hashCode() + " load \t" + this.load
-                + " - Neighbor \t" + nodeNeighbor.hashCode() + " load \t" + nodeNeighbor.load );
-        */
+        int linkableID = FastConfig.getLinkable(protocolID);
+        Linkable linkable = (Linkable) node.getProtocol(linkableID);
+        for (int i = 0; i < linkable.degree(); ++i) {
+            Node peer = linkable.getNeighbor(i);
+        }
+
     }
 
     @Override
     public int degree() {
-        return 0;
+        return this.neighbors.size();
     }
 
     @Override
     public Node getNeighbor(int i) {
+        int index = 0;
+        for(Node neighbor : this.neighbors){
+            if(index == i){
+                return neighbor;
+            }
+            index++;
+        }
         return null;
     }
 
     @Override
     public boolean addNeighbor(Node neighbour) {
-        return false;
+        this.neighbors.add(neighbour);
+        return true;
     }
 
     @Override
