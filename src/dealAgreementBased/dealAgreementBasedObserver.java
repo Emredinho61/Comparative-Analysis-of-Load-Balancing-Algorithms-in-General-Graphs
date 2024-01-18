@@ -67,6 +67,8 @@ public class dealAgreementBasedObserver implements Control {
             }
 
             System.out.println(node.hashCode() + " load " + nodeProtocol.getLoad());
+            System.out.println(node.hashCode() + " degree " + nodeProtocol.degree());
+
         }
 
 
@@ -79,9 +81,11 @@ public class dealAgreementBasedObserver implements Control {
         // Get the protocol implementing the Linkable interface
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(protocolID);
 
-        for (int i = k; i <= CommonState.r.nextInt(Network.size()); i++) {
+        for (int i = 1; i < Network.size(); i++) {
             Node neighbor = Network.get(i);
-            nodeProtocol.addNeighbor(neighbor);
+            if(node != neighbor) {
+                nodeProtocol.addNeighbor(neighbor);
+            }
         }
     }
 
