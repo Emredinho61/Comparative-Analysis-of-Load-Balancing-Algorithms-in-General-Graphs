@@ -1,6 +1,7 @@
 package pushPullSum;
 
 import peersim.cdsim.CDProtocol;
+import peersim.config.FastConfig;
 import peersim.core.Linkable;
 import peersim.core.Node;
 
@@ -24,30 +25,35 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     @Override
     public void nextCycle(Node node, int protocolID) {
-        /*
-        System.out.println("hashcode: \t" + node.hashCode());
-        System.out.println("Sum \t" + this.sum);
-        System.out.println("Weight \t" + this.weight);
-        System.out.println("Average \t" + this.average);
-        // System.out.println("messages \t" + this.messages);
-        System.out.println("receivedNodes \t" + this.receivedNodes);
-         */
+        int linkableID = FastConfig.getLinkable(protocolID);
+        Linkable linkable = (Linkable) node.getProtocol(linkableID);
+        for (int i = 0; i < linkable.degree(); ++i) {
+            Node peer = linkable.getNeighbor(i);
+        }
     }
 
 
     @Override
     public int degree() {
-        return 0;
+        return this.receivedNodes.size();
     }
 
     @Override
     public Node getNeighbor(int i) {
+        int index = 0;
+        for(Node neighbor : this.receivedNodes){
+            if(index == i){
+                return neighbor;
+            }
+            index++;
+        }
         return null;
     }
 
     @Override
     public boolean addNeighbor(Node neighbour) {
-        return false;
+        this.receivedNodes.add(neighbour);
+        return true;
     }
 
     @Override

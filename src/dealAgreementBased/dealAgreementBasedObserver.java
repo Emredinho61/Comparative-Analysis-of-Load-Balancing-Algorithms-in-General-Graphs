@@ -2,10 +2,9 @@ package dealAgreementBased;
 
 import peersim.config.Configuration;
 import peersim.core.*;
-import pushPullSum.PushPullSumParameter;
-import pushPullSum.PushPullSumProtocol;
 
-import java.util.*;
+import javax.swing.*;
+
 
 public class dealAgreementBasedObserver implements Control {
     private static final String PAR_PROT = "protocol";
@@ -13,9 +12,11 @@ public class dealAgreementBasedObserver implements Control {
     private final int pid;
     private final int k;
 
+    private double transferProposal = 0.0;
+
     public dealAgreementBasedObserver(String name) {
         pid = Configuration.getPid(name + "." + PAR_PROT);
-        k = Configuration.getInt(name + "." +PAR_K);
+        k = Configuration.getInt(name + "." + PAR_K);
     }
 
     @Override
@@ -34,24 +35,23 @@ public class dealAgreementBasedObserver implements Control {
             Node node = Network.get(i);
 
             getNeighborsSet(node, pid);
+
             dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+            System.out.println("Node" + node.hashCode() + "neighbobr" + nodeProtocol.getNeighbors());
 
             if (dealAgreementBasedParameter.cycle == 1) {
-                // Load is just a random double for now.
                 ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomDouble);
             }
 
-            // Find a neighbor with minimal load
             Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
-            // System.out.println(minLoadNeighborofNode);
 
             // If a neighbor with minimal load is found, send a fair transfer proposal
             if (minLoadNeighborofNode != null) {
                 dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
                 if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
-                    double transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
-                    minLoadNeighborofNodeProtocol.setProposal(transferProposal);
-                    sendFairProposal(nodeProtocol, minLoadNeighborofNode, transferProposal);
+                    this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
+                    minLoadNeighborofNodeProtocol.setProposal(this.transferProposal);
+                    sendFairProposal(nodeProtocol, minLoadNeighborofNode, this.transferProposal);
                 }
 
             }
@@ -62,12 +62,14 @@ public class dealAgreementBasedObserver implements Control {
 
             if (!nodeProtocol.getAllTransferProposals().isEmpty()) {
                 Node maxProposingNode = findMaximalProposingTransfer(node, pid);
-                // agreeOnDeal(node, maxProposingNode, pid);
-                updateLoadAfterDeal(node, maxProposingNode, pid);
-            }
+                dealAgreementBasedProtocol maxProposingNodeProtocol = (dealAgreementBasedProtocol) maxProposingNode.getProtocol(pid);
+                double transferValue = (maxProposingNodeProtocol.getLoad() - nodeProtocol.getLoad()) / 2;
+                updateLoadAfterDeal(node, maxProposingNode, transferValue, pid);
 
+            }
             System.out.println(node.hashCode() + " load " + nodeProtocol.getLoad());
             System.out.println(node.hashCode() + " degree " + nodeProtocol.degree());
+            System.out.println(averageLoad(pid));
 
         }
 
@@ -78,28 +80,32 @@ public class dealAgreementBasedObserver implements Control {
     }
 
     public void getNeighborsSet(Node node, int protocolID) {
-        // Get the protocol implementing the Linkable interface
+        // method to connect an complete Graph
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(protocolID);
-
-        for (int i = 1; i < Network.size(); i++) {
+        for (int i = 0; i < Network.size(); i++) {
             Node neighbor = Network.get(i);
+            // we don't want self-loops
+            System.out.println(node != neighbor);
             if(node != neighbor) {
                 nodeProtocol.addNeighbor(neighbor);
+                nodeProtocol.addNewNeighbors(neighbor);
             }
         }
     }
 
     private Node findMinLoadNeighbor(Node node, int pid) {
+        // method to find the Node with minimal load
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
 
         double minLoad = Double.MAX_VALUE;
         Node minLoadNeighbor = null;
 
+        // we look in the neighbors Set for the minimal Load
         for (int i = 0; i < nodeProtocol.degree(); i++) {
             Node neighbor = nodeProtocol.getNeighbor(i);
             dealAgreementBasedProtocol neighborProtocol = (dealAgreementBasedProtocol) neighbor.getProtocol(pid);
-
             if (neighborProtocol.getLoad() < minLoad) {
+                // update minload and minLoadNeighbor if previous minimum is bigger than current nodes load
                 minLoad = neighborProtocol.getLoad();
                 minLoadNeighbor = neighbor;
             }
@@ -115,22 +121,37 @@ public class dealAgreementBasedObserver implements Control {
     private Node findMaximalProposingTransfer(Node node, int protocolID) {
         double maxProposal = Double.MIN_VALUE;
         Node maxProposingNode = null;
+
         dealAgreementBasedProtocol nodeProtocol = ((dealAgreementBasedProtocol) node.getProtocol(protocolID));
+
+        // now we look in the proposals set for the maximal value
         for (TupleContainer oneTupleContainer : nodeProtocol.getAllTransferProposals()) {
             if (oneTupleContainer.getTransferProposal() > maxProposal) {
+                // update maxProposal and maxProposingNode if proposal we look at is bigger than the current maxproposal
                 maxProposal = oneTupleContainer.getTransferProposal();
                 maxProposingNode = oneTupleContainer.getProposingNode();
             }
         }
         return maxProposingNode;
+
     }
 
-    private void updateLoadAfterDeal(Node receivingNode, Node sendingNode, int protocolID) {
+    private void updateLoadAfterDeal(Node receivingNode, Node sendingNode, double transferValue, int protocolID) {
+        // method to update to new load values
         dealAgreementBasedProtocol receivingNodeProtocol = (dealAgreementBasedProtocol) receivingNode.getProtocol(protocolID);
         dealAgreementBasedProtocol sendingNodeProtocol = (dealAgreementBasedProtocol) sendingNode.getProtocol(protocolID);
-        double transferLoad = (sendingNodeProtocol.getLoad() - receivingNodeProtocol.getLoad()) / 2;
-        sendingNodeProtocol.subtractLoad(transferLoad);
-        receivingNodeProtocol.addLoad(transferLoad);
+        sendingNodeProtocol.subtractLoad(transferValue);
+        receivingNodeProtocol.addLoad(transferValue);
+
+    }
+
+    public double averageLoad(int protocolID) {
+        double sum = 0;
+        for (int i = 1; i < Network.size(); i++) {
+            dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) Network.get(i).getProtocol(protocolID);
+            sum += nodeProtocol.getLoad();
+        }
+        return sum / Network.size();
     }
 
 

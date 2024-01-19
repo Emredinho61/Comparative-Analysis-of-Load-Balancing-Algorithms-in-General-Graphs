@@ -19,7 +19,7 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
 
     Set<TupleContainer> transferProposals = new HashSet<>();
 
-    protected Set<Node> neighbors = new HashSet<Node>();
+    protected Set<Node> neighbors = new HashSet<>();
 
     public dealAgreementBasedProtocol(String name) {
 
@@ -32,6 +32,9 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
         Linkable linkable = (Linkable) node.getProtocol(linkableID);
         for (int i = 0; i < linkable.degree(); ++i) {
             Node peer = linkable.getNeighbor(i);
+            if(node.hashCode() != i) {
+                linkable.addNeighbor(peer);
+            }
         }
 
     }
@@ -44,8 +47,8 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
     @Override
     public Node getNeighbor(int i) {
         int index = 0;
-        for(Node neighbor : this.neighbors){
-            if(index == i){
+        for (Node neighbor : this.neighbors) {
+            if (index == i) {
                 return neighbor;
             }
             index++;
@@ -126,6 +129,10 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
         return this.neighbors;
     }
 
+    public Set<Node> resetNeighbors() {
+        return new HashSet<>();
+    }
+
     public void addNewNeighbors(Node node) {
         this.neighbors.add(node);
     }
@@ -136,6 +143,10 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
 
     public Set<TupleContainer> getAllTransferProposals() {
         return this.transferProposals;
+    }
+
+    public void resetTransferProposals() {
+        this.transferProposals = new HashSet<>();
     }
 
 }
