@@ -37,7 +37,7 @@ public class PushPullSumObserver implements Control {
 
                 // use the random number as index number of the Network to get a "random" Node
                 Node node = Network.get(i);
-                getNeighborsSet(node, pid);
+                // getNeighborsSet(node, pid);
 
                 // For the first cycle we set the initial Sum, Weight And the Set of Messages
                 if (PushPullSumParameter.cycle == 1) {
@@ -59,6 +59,7 @@ public class PushPullSumObserver implements Control {
 
 
                     System.out.println(output);
+                    System.out.println(((PushPullSumProtocol) Network.get(i).getProtocol(pid)).degree());
 
                 } else {
 

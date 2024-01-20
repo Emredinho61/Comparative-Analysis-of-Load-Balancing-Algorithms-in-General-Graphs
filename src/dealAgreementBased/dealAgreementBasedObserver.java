@@ -34,10 +34,9 @@ public class dealAgreementBasedObserver implements Control {
 
             Node node = Network.get(i);
 
-            getNeighborsSet(node, pid);
+            // getNeighborsSet(node, pid);
 
             dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
-            System.out.println("Node" + node.hashCode() + "neighbobr" + nodeProtocol.getNeighbors());
 
             if (dealAgreementBasedParameter.cycle == 1) {
                 ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomDouble);
@@ -53,7 +52,6 @@ public class dealAgreementBasedObserver implements Control {
                     minLoadNeighborofNodeProtocol.setProposal(this.transferProposal);
                     sendFairProposal(nodeProtocol, minLoadNeighborofNode, this.transferProposal);
                 }
-
             }
         }
         for (int i = 0; i < Network.size(); i++) {
@@ -69,7 +67,6 @@ public class dealAgreementBasedObserver implements Control {
             }
             System.out.println(node.hashCode() + " load " + nodeProtocol.getLoad());
             System.out.println(node.hashCode() + " degree " + nodeProtocol.degree());
-            System.out.println(averageLoad(pid));
 
         }
 
@@ -85,8 +82,7 @@ public class dealAgreementBasedObserver implements Control {
         for (int i = 0; i < Network.size(); i++) {
             Node neighbor = Network.get(i);
             // we don't want self-loops
-            System.out.println(node != neighbor);
-            if(node != neighbor) {
+            if (node != neighbor) {
                 nodeProtocol.addNeighbor(neighbor);
                 nodeProtocol.addNewNeighbors(neighbor);
             }
@@ -144,15 +140,5 @@ public class dealAgreementBasedObserver implements Control {
         receivingNodeProtocol.addLoad(transferValue);
 
     }
-
-    public double averageLoad(int protocolID) {
-        double sum = 0;
-        for (int i = 1; i < Network.size(); i++) {
-            dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) Network.get(i).getProtocol(protocolID);
-            sum += nodeProtocol.getLoad();
-        }
-        return sum / Network.size();
-    }
-
 
 }
