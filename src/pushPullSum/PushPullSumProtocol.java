@@ -29,6 +29,9 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
         Linkable linkable = (Linkable) node.getProtocol(linkableID);
         for (int i = 0; i < linkable.degree(); ++i) {
             Node peer = linkable.getNeighbor(i);
+            if(node != peer){
+                linkable.addNeighbor(peer);
+            }
         }
     }
 
@@ -78,7 +81,6 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
         try {
 
             node = (PushPullSumProtocol) super.clone();
-            // node.receivedNodes = new HashSet<>();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         } // never happens

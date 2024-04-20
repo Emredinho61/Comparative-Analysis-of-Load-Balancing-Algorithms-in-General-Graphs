@@ -21,83 +21,91 @@ public class PushPullSumObserver implements Control {
 
     @Override
     public boolean execute() {
+        boolean converged = false;
         System.out.println("\n Cycle No " + PushPullSumParameter.cycle);
 
         // For now we generate a txt file using the PrintWriter and the FileWriter modules later on we want to
         // use the terminal to get the outputs
-        try (PrintWriter writer = new PrintWriter(new FileWriter("terminalOutput2.txt", true), true)) {
-            for (int i = 0; i < Network.size(); i++) {
-                double MIN_LOWER = 0;
-                double MAX_UPPER = 100;
+        for (int i = 0; i < Network.size(); i++) {
+            double MIN_LOWER = 0;
+            double MAX_UPPER = 100;
 
-                // generate a random double
-                double generateRandom = CommonState.r.nextDouble();
-                double randomDouble = MIN_LOWER + (MAX_UPPER - MIN_LOWER) * generateRandom;
-                int chosenNeighbor = CommonState.r.nextInt(Network.size());
+            // generate a random double
+            double generateRandom = CommonState.r.nextDouble();
+            double randomDouble = MIN_LOWER + (MAX_UPPER - MIN_LOWER) * generateRandom;
+            int chosenNeighbor = CommonState.r.nextInt(Network.size());
 
-                // use the random number as index number of the Network to get a "random" Node
-                Node node = Network.get(i);
-                // getNeighborsSet(node, pid);
+            // use the random number as index number of the Network to get a "random" Node
+            Node node = Network.get(i);
+            // getNeighborsSet(node, pid);
 
-                // For the first cycle we set the initial Sum, Weight And the Set of Messages
-                if (PushPullSumParameter.cycle == 1) {
-                    // Sum is just a random double for now.
-                    ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomDouble);
+            // For the first cycle we set the initial Sum, Weight And the Set of Messages
+            if (PushPullSumParameter.cycle == 1) {
+                // Sum is just a random double for now.
+                ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomDouble);
 
-                    // initial weight is 1, sum of all weights is n (number of nodes in the network)
-                    ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(1);
+                // initial weight is 1, sum of all weights is n (number of nodes in the network)
+                ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(1);
 
-                    // Messages are Tuples of Sums and Weights of each node
-                    TupleContainer Messages = new TupleContainer(((PushPullSumProtocol) node.getProtocol(pid)).getSum(),
-                            ((PushPullSumProtocol) node.getProtocol(pid)).getWeight());
-                    ((PushPullSumProtocol) node.getProtocol(pid)).setMessages(Messages);
-                    String output = "ID \t" +
-                            Network.get(i).hashCode() +
-                            " sum \t " +
-                            ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getSum() +
-                            " weight \t" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getWeight();
-
-
-                    System.out.println(output);
-                    System.out.println(((PushPullSumProtocol) Network.get(i).getProtocol(pid)).degree());
-
-                } else {
-
-                    aggregateData((PushPullSumProtocol) node.getProtocol(pid));
-                    sendRequestData(node, pid);
-                    respondToRequests((PushPullSumProtocol) node.getProtocol(pid), pid);
+                // Messages are Tuples of Sums and Weights of each node
+                TupleContainer Messages = new TupleContainer(((PushPullSumProtocol) node.getProtocol(pid)).getSum(),
+                        ((PushPullSumProtocol) node.getProtocol(pid)).getWeight());
+                ((PushPullSumProtocol) node.getProtocol(pid)).setMessages(Messages);
+                String output = "ID \t" +
+                        Network.get(i).hashCode() +
+                        " sum \t " +
+                        ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getSum() +
+                        " weight \t" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getWeight();
 
 
+                System.out.println(output);
+                System.out.println(((PushPullSumProtocol) Network.get(i).getProtocol(pid)).degree());
 
-                    // we output the Hashcode, Sum and Weight of each Node in each cycle
-                    String output = "ID \t" +
-                            Network.get(i).hashCode() +
-                            " sum \t " +
-                            ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getSum() +
-                            " weight \t" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getWeight();
+            } else {
 
-
-                    System.out.println(output);
+                aggregateData((PushPullSumProtocol) node.getProtocol(pid));
+                sendRequestData(node, pid);
+                respondToRequests((PushPullSumProtocol) node.getProtocol(pid), pid);
 
 
-                    // System.out.println("Messages node" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getMessage());
-                    // System.out.println("Messages Neighbor" + ((PushPullSumProtocol) nodeNeighbor.getProtocol(pid)).getMessage());
-                    System.out.println("Average" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getAverage());
+                // we output the Hashcode, Sum and Weight of each Node in each cycle
+                String output = "ID \t" +
+                        Network.get(i).hashCode() +
+                        " sum \t " +
+                        ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getSum() +
+                        " weight \t" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getWeight();
 
-                    // writer.println(output);
+
+                System.out.println(output);
 
 
-                }
+                // System.out.println("Messages node" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getMessage());
+                // System.out.println("Messages Neighbor" + ((PushPullSumProtocol) nodeNeighbor.getProtocol(pid)).getMessage());
+                System.out.println("Average" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getAverage());
+
+                // writer.println(output);
+
+
 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
+        }
         PushPullSumParameter.cycle++;
 
 
+
+
         return false;
+    }
+
+    private static boolean areEqualUpToNDecimalPlaces(double value1, double value2, int decimalPlaces) {
+        // Scale values to the desired number of decimal places
+        double scaleFactor = Math.pow(10, decimalPlaces);
+        double scaledValue1 = Math.round(value1 * scaleFactor);
+        double scaledValue2 = Math.round(value2 * scaleFactor);
+
+        // Compare scaled values
+        return Double.compare(scaledValue1, scaledValue2) == 0;
     }
 
     public void getNeighborsSet(Node node, int protocolID) {
