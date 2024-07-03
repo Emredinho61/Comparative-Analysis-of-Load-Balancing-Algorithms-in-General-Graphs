@@ -1,5 +1,5 @@
 package dealAgreementBased;
 
 public class dealAgreementBasedParameter {
-    public static int cycle = 1;
+    public static int cycle = 0;
 }

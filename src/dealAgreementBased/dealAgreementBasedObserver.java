@@ -5,6 +5,10 @@ import peersim.core.*;
 
 import javax.swing.*;
 
+import java.util.Random;
+
+import static peersim.core.CommonState.r;
+
 
 public class dealAgreementBasedObserver implements Control {
     private static final String PAR_PROT = "protocol";
@@ -17,6 +21,7 @@ public class dealAgreementBasedObserver implements Control {
     public dealAgreementBasedObserver(String name) {
         pid = Configuration.getPid(name + "." + PAR_PROT);
         k = Configuration.getInt(name + "." + PAR_K);
+
     }
 
     @Override
@@ -24,69 +29,73 @@ public class dealAgreementBasedObserver implements Control {
         System.out.println("\n Cycle No " + dealAgreementBasedParameter.cycle);
 
         for (int i = 0; i < Network.size(); i++) {
-            double MIN_LOWER = 0;
-            double MAX_UPPER = 100;
-
-            // generate a random double
-            double generateRandom = CommonState.r.nextDouble();
-            double randomDouble = MIN_LOWER + (MAX_UPPER - MIN_LOWER) * generateRandom;
+            int MIN_LOWER = 0;
+            int MAX_UPPER = 100;
+            Random r = new Random();
 
 
             Node node = Network.get(i);
-
-            // getNeighborsSet(node, pid);
-
             dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+            initNeighbors(node, pid);
 
-            if (dealAgreementBasedParameter.cycle == 1) {
-                ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomDouble);
-            }
 
-            Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
+            if (dealAgreementBasedParameter.cycle == 0) {
+                int randomNumber = (int) (Math.random() * 100);
+                ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
+                System.out.println(((dealAgreementBasedProtocol) node.getProtocol(pid)).getLoad());
+            }else {
 
-            // If a neighbor with minimal load is found, send a fair transfer proposal
-            if (minLoadNeighborofNode != null) {
+
+                // If a neighbor with minimal load is found, send a fair transfer proposal
+                Node minLoadNeighborofNode = findMinLoadNeighbor2(node, pid);
+
                 dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
                 if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
                     this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
                     minLoadNeighborofNodeProtocol.setProposal(this.transferProposal);
                     sendFairProposal(nodeProtocol, minLoadNeighborofNode, this.transferProposal);
+
                 }
-            }
-        }
-        for (int i = 0; i < Network.size(); i++) {
-            Node node = Network.get(i);
-            dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+                if (!nodeProtocol.getAllTransferProposals().isEmpty()) {
+                    Node maxProposingNode = findMaximalProposingTransfer(node, pid);
+                    dealAgreementBasedProtocol maxProposingNodeProtocol = (dealAgreementBasedProtocol) maxProposingNode.getProtocol(pid);
+                    double transferValue = (maxProposingNodeProtocol.getLoad() - nodeProtocol.getLoad()) / 2;
+                    updateLoadAfterDeal(node, maxProposingNode, transferValue, pid);
 
-            if (!nodeProtocol.getAllTransferProposals().isEmpty()) {
-                Node maxProposingNode = findMaximalProposingTransfer(node, pid);
-                dealAgreementBasedProtocol maxProposingNodeProtocol = (dealAgreementBasedProtocol) maxProposingNode.getProtocol(pid);
-                double transferValue = (maxProposingNodeProtocol.getLoad() - nodeProtocol.getLoad()) / 2;
-                updateLoadAfterDeal(node, maxProposingNode, transferValue, pid);
+                }
 
             }
-            System.out.println(node.hashCode() + " load " + nodeProtocol.getLoad());
-            System.out.println(node.hashCode() + " degree " + nodeProtocol.degree());
-
         }
-
 
         dealAgreementBasedParameter.cycle++;
 
         return false;
     }
 
-    public void getNeighborsSet(Node node, int protocolID) {
-        // method to connect an complete Graph
-        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(protocolID);
+    private void initNeighbors(Node node, int pid) {
+        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
         for (int i = 0; i < Network.size(); i++) {
             Node neighbor = Network.get(i);
-            // we don't want self-loops
-            if (node != neighbor) {
+            if (!node.equals(neighbor)) {
                 nodeProtocol.addNeighbor(neighbor);
-                nodeProtocol.addNewNeighbors(neighbor);
+            } else {
+                nodeProtocol.removeNeighbor(neighbor);
             }
         }
+    }
+
+    private Node findMinLoadNeighbor2(Node node, int pid){
+        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+        double minLoad = Double.MAX_VALUE;
+        Node minLoadNeighbor = null;
+        for (Node oneNode: nodeProtocol.getNeighbors()){
+            dealAgreementBasedProtocol neighborProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+            if(neighborProtocol.getLoad() < minLoad){
+                minLoad = neighborProtocol.getLoad();
+                minLoadNeighbor = oneNode;
+            }
+        }
+        return minLoadNeighbor;
     }
 
     private Node findMinLoadNeighbor(Node node, int pid) {
@@ -138,7 +147,6 @@ public class dealAgreementBasedObserver implements Control {
         dealAgreementBasedProtocol sendingNodeProtocol = (dealAgreementBasedProtocol) sendingNode.getProtocol(protocolID);
         sendingNodeProtocol.subtractLoad(transferValue);
         receivingNodeProtocol.addLoad(transferValue);
-
     }
 
 }

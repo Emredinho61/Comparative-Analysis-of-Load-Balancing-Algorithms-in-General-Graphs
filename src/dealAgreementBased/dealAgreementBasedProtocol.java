@@ -37,6 +37,8 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
             }
         }
 
+        System.out.println("Node " + node.getID() + " Load: " + getLoad());
+
     }
 
     @Override
@@ -82,7 +84,6 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
         dealAgreementBasedProtocol node = null;
 
         try {
-
             node = (dealAgreementBasedProtocol) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -91,6 +92,10 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
         return node;
     }
 
+    public boolean removeNeighbor(Node neighbour) {
+        this.neighbors.remove(neighbour);
+        return true;
+    }
     public double getValue() {
         return value;
     }
