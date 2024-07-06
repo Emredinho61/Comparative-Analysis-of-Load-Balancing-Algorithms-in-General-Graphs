@@ -28,17 +28,8 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
 
     @Override
     public void nextCycle(Node node, int protocolID) {
-        int linkableID = FastConfig.getLinkable(protocolID);
-        Linkable linkable = (Linkable) node.getProtocol(linkableID);
-        for (int i = 0; i < linkable.degree(); ++i) {
-            Node peer = linkable.getNeighbor(i);
-            if(node.hashCode() != i) {
-                linkable.addNeighbor(peer);
-            }
-        }
-
         System.out.println("Node " + node.getID() + " Load: " + getLoad());
-
+        resetTransferProposals();
     }
 
     @Override
