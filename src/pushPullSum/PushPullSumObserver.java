@@ -1,14 +1,19 @@
 package pushPullSum;
 
+import dealAgreementBased.dealAgreementBasedProtocol;
 import peersim.config.Configuration;
 import peersim.core.CommonState;
 import peersim.core.Control;
 import peersim.core.Network;
 import peersim.core.Node;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import static peersim.core.CommonState.r;
+import static pushPullSum.PushPullSumParameter.sumsList;
 
 
 public class PushPullSumObserver implements Control {
@@ -17,6 +22,14 @@ public class PushPullSumObserver implements Control {
 
     public PushPullSumObserver(String name) {
         pid = Configuration.getPid(name + "." + PAR_PROT);
+        for (int i = 0; i < Network.size(); i++) {
+            int MIN_LOWER = 0;
+            int MAX_UPPER = 100;
+            Random r = new Random();
+            double randomNumber = r.nextInt(MAX_UPPER - MIN_LOWER) + MIN_LOWER;
+            sumsList.add(randomNumber);
+        }
+
     }
 
     @Override
@@ -27,12 +40,13 @@ public class PushPullSumObserver implements Control {
         // For now we generate a txt file using the PrintWriter and the FileWriter modules later on we want to
         // use the terminal to get the outputs
         for (int i = 0; i < Network.size(); i++) {
-            double MIN_LOWER = 0;
-            double MAX_UPPER = 100;
+            int MIN_LOWER = 0;
+            int MAX_UPPER = 100;
+            Random r = new Random();
 
             // generate a random double
             double generateRandom = CommonState.r.nextDouble();
-            double randomDouble = MIN_LOWER + (MAX_UPPER - MIN_LOWER) * generateRandom;
+            int randomNumber = r.nextInt(MAX_UPPER - MIN_LOWER) + MIN_LOWER;
             int chosenNeighbor = CommonState.r.nextInt(Network.size());
 
             // use the random number as index number of the Network to get a "random" Node
@@ -40,10 +54,21 @@ public class PushPullSumObserver implements Control {
             // getNeighborsSet(node, pid);
 
             // For the first cycle we set the initial Sum, Weight And the Set of Messages
-            if (PushPullSumParameter.cycle == 1) {
+            if (PushPullSumParameter.cycle == 0) {
                 // Sum is just a random double for now.
-                ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomDouble);
+                // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
+                // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(sumsList.get(i));
 
+                // For testing purposes we set the Sums manually
+                if (node.getID() == 0) {
+                    ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
+                } else if (node.getID() == 1) {
+                    ((PushPullSumProtocol) node.getProtocol(pid)).setSum(31);
+                } else if (node.getID() == 2) {
+                    ((PushPullSumProtocol) node.getProtocol(pid)).setSum(69);
+                } else {
+                    ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
+                }
                 // initial weight is 1, sum of all weights is n (number of nodes in the network)
                 ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(1);
 
@@ -59,15 +84,11 @@ public class PushPullSumObserver implements Control {
 
 
                 System.out.println(output);
-                System.out.println(((PushPullSumProtocol) Network.get(i).getProtocol(pid)).degree());
-
             } else {
 
                 aggregateData((PushPullSumProtocol) node.getProtocol(pid));
                 sendRequestData(node, pid);
                 respondToRequests((PushPullSumProtocol) node.getProtocol(pid), pid);
-
-
                 // we output the Hashcode, Sum and Weight of each Node in each cycle
                 String output = "ID \t" +
                         Network.get(i).hashCode() +
@@ -86,13 +107,11 @@ public class PushPullSumObserver implements Control {
                 // writer.println(output);
 
 
-
             }
 
         }
+        
         PushPullSumParameter.cycle++;
-
-
 
 
         return false;
@@ -138,23 +157,27 @@ public class PushPullSumObserver implements Control {
         Procedure RequestData of the pseudocode in the Paper "Adding Pull to Push Sum for Approximate Data Aggregation"
          */
         PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(protocolID);
-        for (Node neighbor : nodeProtocol.getReceivedNodes()) {
-
+        int randomID = r.nextInt(Network.size());
+        if (randomID != node.getID()) {
+            Node neighbor = Network.get(randomID);
+            System.out.println(neighbor.getID());
             PushPullSumProtocol neighborProtocol = (PushPullSumProtocol) neighbor.getProtocol(protocolID);
             // set of nodes that are calling our node u at round t
 
             double requestSum = (nodeProtocol.getSum() / 2);
             double requestWeight = (nodeProtocol.getWeight() / 2);
 
+
             // send (sum / 2) and (weight / 2)  to ourselves
             substractSentData(requestSum, requestWeight, nodeProtocol);
-
 
             // send (sum / 2) and (weight / 2)  to the random chosen node
             receiveRequestData(requestSum, requestWeight, neighborProtocol);
 
             // we also add the tuple of our new sums and weights to the set of messages
             nodeProtocol.setMessages(new TupleContainer(requestSum, requestWeight));
+        } else {
+            sendRequestData(node, pid);
         }
     }
 

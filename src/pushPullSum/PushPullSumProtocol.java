@@ -25,14 +25,7 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     @Override
     public void nextCycle(Node node, int protocolID) {
-        int linkableID = FastConfig.getLinkable(protocolID);
-        Linkable linkable = (Linkable) node.getProtocol(linkableID);
-        for (int i = 0; i < linkable.degree(); ++i) {
-            Node peer = linkable.getNeighbor(i);
-            if(node != peer){
-                linkable.addNeighbor(peer);
-            }
-        }
+        System.out.println("SUM " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getSum() + "WEIGHT " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getWeight() + "AVERAGE: " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getAverage());
     }
 
 
@@ -44,8 +37,8 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
     @Override
     public Node getNeighbor(int i) {
         int index = 0;
-        for(Node neighbor : this.receivedNodes){
-            if(index == i){
+        for (Node neighbor : this.receivedNodes) {
+            if (index == i) {
                 return neighbor;
             }
             index++;
@@ -115,7 +108,7 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
 
     public double getWeight() {
-        return weight;
+        return this.weight;
     }
 
     public void setWeight(double weight) {
