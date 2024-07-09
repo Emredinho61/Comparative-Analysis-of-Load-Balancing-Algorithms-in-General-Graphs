@@ -15,8 +15,15 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
     protected double sum;
     protected double weight;
     protected double average = 0;
-    protected Set<TupleContainer> messages = new HashSet<>();
+    protected Set<Integer> messages = new HashSet<>();
     private Set<Node> receivedNodes = new HashSet<>();
+    protected double pushSum;
+    protected double pushWeight;
+    protected double pullSum;
+    protected double pullWeight;
+    protected double newSum;
+    protected double newWeight;
+    protected double protocolid;
 
 
     public PushPullSumProtocol(String name) {
@@ -25,9 +32,10 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     @Override
     public void nextCycle(Node node, int protocolID) {
+        resetMessages();
+        this.protocolid = node.getID();
         System.out.println("SUM " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getSum() + "WEIGHT " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getWeight() + "AVERAGE: " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getAverage());
     }
-
 
     @Override
     public int degree() {
@@ -98,12 +106,12 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
         this.sum = sum;
     }
 
-    public void addSum(double sum) {
-        this.sum += sum;
+    public void addNewSum(double sum) {
+        this.newSum += sum;
     }
 
-    public void subtractSum(double sum) {
-        this.sum -= sum;
+    public void subtractNewSum(double sum) {
+        this.newSum -= sum;
     }
 
 
@@ -115,24 +123,72 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
         this.weight = weight;
     }
 
-    public void addWeight(double weight) {
-        this.weight += weight;
+    public double getNewWeight() {
+        return this.newWeight;
     }
 
-    public void subtractWeight(double weight) {
-        this.weight -= weight;
+    public void setNewWeight(double newWeight) {
+        this.newWeight = newWeight;
     }
 
-    public Set<TupleContainer> getMessage() {
+    public double getNewSum() {
+        return this.newSum;
+    }
+
+    public void setNewSum(double newSum) {
+        this.newSum = newSum;
+    }
+
+    public void addNewWeight(double newWeight) {
+        this.newWeight += newWeight;
+    }
+
+    public double getPushSum() {
+        return this.pushSum;
+    }
+
+    public double getPushWeight() {
+        return this.pushWeight;
+    }
+
+    public double getPullSum() {
+        return this.pullSum;
+    }
+
+    public double getPullWeight() {
+        return this.pullWeight;
+    }
+
+    public void setPushSum(double pushSum) {
+        this.pushSum = pushSum;
+    }
+
+    public void setPushWeight(double pushWeight) {
+        this.pushWeight = pushWeight;
+    }
+
+    public void setPullSum(double pullSum) {
+        this.pullSum = pullSum;
+    }
+
+    public void setPullWeight(double pullWeight) {
+        this.pullWeight = pullWeight;
+    }
+
+    public void subtractNewWeight(double weight) {
+        this.newWeight -= weight;
+    }
+
+    public Set<Integer> getMessage() {
         return messages;
     }
 
-    public void setMessages(TupleContainer messages) {
+    public void setMessages(Integer messages) {
         this.messages.add(messages);
     }
 
     public void resetMessages() {
-        this.messages.clear();
+        this.messages = new HashSet<>();
     }
 
     public double getAverage() {
@@ -149,5 +205,9 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
 
     public void addReceivedNode(Node node) {
         this.receivedNodes.add(node);
+    }
+
+    public double getProtcolid() {
+        return this.protocolid;
     }
 }
