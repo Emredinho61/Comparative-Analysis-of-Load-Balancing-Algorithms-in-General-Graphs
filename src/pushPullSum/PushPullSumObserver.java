@@ -59,9 +59,11 @@ public class PushPullSumObserver implements Control {
             if (PushPullSumParameter.cycle == 0) {
                 // Sum is just a random double for now.
                 // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
-                // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(sumsList.get(i));
+                ((PushPullSumProtocol) node.getProtocol(pid)).setSum(sumsList.get(i));
+                ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(sumsList.get(i));
 
                 // For testing purposes we set the Sums manually
+                /*
                 if (node.getID() == 0) {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(10);
@@ -75,6 +77,7 @@ public class PushPullSumObserver implements Control {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(10);
                 }
+                 */
                 // initial weight is 1, sum of all weights is n (number of nodes in the network)
                 ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(1);
                 ((PushPullSumProtocol) node.getProtocol(pid)).setNewWeight(1);
@@ -243,17 +246,16 @@ public class PushPullSumObserver implements Control {
         return sumOfWeights;
     }
 
+    private double roundValue(double value) {
+        return (double) Math.round(value * 100d) / 100d;
+    }
+
     private void aggregateData(PushPullSumProtocol node, int pid) {
         /*
         Procedure Aggregate of the Paper "Adding Pull to Push Sum for Approximate Data Aggregation"
          */
-        double sumOfSumMessages = calculateSumofSum(node, pid);
-        double sumOfWeightMessages = calculateSumofWeights(node);
-
-        System.out.println("SUM :" + sumOfSumMessages);
-        System.out.println("WEIGHT " + sumOfWeightMessages);
         // set the average which is defined as s_u/w_u at time t
-        node.setAverage(sumOfSumMessages / sumOfWeightMessages);
+        node.setAverage(node.getSum() / node.getWeight());
         // node.resetMessages();
     }
 }
