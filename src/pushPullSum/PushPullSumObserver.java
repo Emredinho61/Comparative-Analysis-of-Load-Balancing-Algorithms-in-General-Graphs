@@ -57,13 +57,14 @@ public class PushPullSumObserver implements Control {
 
             // For the first cycle we set the initial Sum, Weight And the Set of Messages
             if (PushPullSumParameter.cycle == 0) {
+                initNeighbors(node, pid);
                 // Sum is just a random double for now.
                 // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
                 ((PushPullSumProtocol) node.getProtocol(pid)).setSum(sumsList.get(i));
                 ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(sumsList.get(i));
 
                 // For testing purposes we set the Sums manually
-                /*
+
                 if (node.getID() == 0) {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(10);
@@ -77,7 +78,7 @@ public class PushPullSumObserver implements Control {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(10);
                 }
-                 */
+
                 // initial weight is 1, sum of all weights is n (number of nodes in the network)
                 ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(1);
                 ((PushPullSumProtocol) node.getProtocol(pid)).setNewWeight(1);
@@ -95,13 +96,13 @@ public class PushPullSumObserver implements Control {
                 // System.out.println("PushSum " + ((PushPullSumProtocol) node.getProtocol(pid)).getPushSum() + " PushWeight " + ((PushPullSumProtocol) node.getProtocol(pid)).getPushWeight());
                 aggregateData((PushPullSumProtocol) node.getProtocol(pid), pid);
                 sendRequestData(node, pid, ((PushPullSumProtocol) node.getProtocol(pid)).getPushSum(), ((PushPullSumProtocol) node.getProtocol(pid)).getPushWeight());
-
             }
 
         }
         for (int i = 0; i < Network.size(); i++) {
             Node node = Network.get(i);
             respondToRequests((PushPullSumProtocol) node.getProtocol(pid), pid, ((PushPullSumProtocol) node.getProtocol(pid)).getPushSum(), ((PushPullSumProtocol) node.getProtocol(pid)).getPushWeight());
+
         }
         if (PushPullSumParameter.cycle != 0) {
             for (int i = 0; i < Network.size(); i++) {
@@ -132,6 +133,19 @@ public class PushPullSumObserver implements Control {
         return false;
     }
 
+    private void initNeighbors(Node node, int pid) {
+        // connecting the graph such that it is a complete (fully connected grpah)
+        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+        for (int i = 0; i < Network.size(); i++) {
+            Node neighbor = Network.get(i);
+            if (!node.equals(neighbor)) {
+                nodeProtocol.addNeighbor(neighbor);
+            } else {
+                nodeProtocol.removeNeighbor(neighbor);
+            }
+        }
+    }
+
     private static boolean areEqualUpToNDecimalPlaces(double value1, double value2, int decimalPlaces) {
         // Scale values to the desired number of decimal places
         double scaleFactor = Math.pow(10, decimalPlaces);
@@ -142,16 +156,6 @@ public class PushPullSumObserver implements Control {
         return Double.compare(scaledValue1, scaledValue2) == 0;
     }
 
-    public void getNeighborsSet(Node node, int protocolID) {
-        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(protocolID);
-
-        for (int i = 1; i < Network.size(); i++) {
-            Node neighbor = Network.get(i);
-            if (node != neighbor) {
-                nodeProtocol.addNeighbor(neighbor);
-            }
-        }
-    }
 
     private void receiveRequestData(double requestSum, double requestWeight, PushPullSumProtocol node) {
         /*

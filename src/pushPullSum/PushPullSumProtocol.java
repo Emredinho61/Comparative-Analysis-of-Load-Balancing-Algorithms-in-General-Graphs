@@ -203,6 +203,11 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
         return this.receivedNodes;
     }
 
+    public boolean removeNeighbor(Node neighbour) {
+        this.receivedNodes.remove(neighbour);
+        return true;
+    }
+
     public void addReceivedNode(Node node) {
         this.receivedNodes.add(node);
     }
