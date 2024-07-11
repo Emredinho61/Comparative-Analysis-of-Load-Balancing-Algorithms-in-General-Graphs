@@ -1,11 +1,16 @@
 package loadBalancingProtocols;
 
 import dealAgreementBased.TupleContainer;
+import org.nfunk.jep.function.Str;
 import peersim.config.Configuration;
 import peersim.core.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Random;
 
+import static loadBalancingProtocols.loadBalancingParameters.cycleDB;
 import static loadBalancingProtocols.loadBalancingParameters.loads_sumsList;
 
 
@@ -32,70 +37,81 @@ public class dealAgreementBasedObserver implements Control {
 
     @Override
     public boolean execute() {
-        System.out.println("\n Cycle No " + loadBalancingParameters.cycleDB);
-        if (loadBalancingParameters.cycleDB == 0) {
-            System.out.println(" ");
-        } else {
-            System.out.println("MEAN SQUARED ERROR: " + MeanSquaredError(pid));
-        }
-
-        for (int i = 0; i < Network.size(); i++) {
-            int MIN_LOWER = 0;
-            int MAX_UPPER = 100;
-            Random r = new Random();
-
-
-            Node node = Network.get(i);
-            dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
-            initNeighbors(node, pid);
-
-
+        try (PrintWriter writer = new PrintWriter(new FileWriter("terminalOutput.txt", true), false)) {
+            System.out.println("\n Cycle No " + loadBalancingParameters.cycleDB);
             if (loadBalancingParameters.cycleDB == 0) {
-                int randomNumber = (int) (Math.random() * 100);
-                // ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
-                ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(loads_sumsList.get(i));
-                // for testing purposes I am setting the Loads manually
-
-                /*
-                if (node.getID() == 0) {
-                    ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
-                } else if (node.getID() == 1) {
-                    ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(31);
-                } else if (node.getID() == 2) {
-                    ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(69);
-                } else {
-                    ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
-                }
-                 */
-
+                System.out.println(" ");
             } else {
-                System.out.println("Node: " + node.getID() + " load: " + nodeProtocol.getLoad());
+                String ouput = "###################################### Deal Agreement Based Protocol ######################################";
+                writer.println(ouput);
+                String outpuCycle = "Cycle No.: " + loadBalancingParameters.cycleDB;
+                writer.println(outpuCycle);
+                System.out.println("MSE: " + MeanSquaredError(pid));
+                String outputMSE = "MSE: " + MeanSquaredError(pid);
+                writer.println(outputMSE);
+            }
 
-                // If a neighbor with minimal load is found, send a fair transfer proposal
-                Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
+            for (int i = 0; i < Network.size(); i++) {
+                int MIN_LOWER = 0;
+                int MAX_UPPER = 100;
+                Random r = new Random();
 
-                dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
-                if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
-                    this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
-                    // minLoadNeighborofNodeProtocol.setProposal(this.transferProposal);
-                    sendFairProposal(minLoadNeighborofNodeProtocol, node, this.transferProposal);
 
+                Node node = Network.get(i);
+                dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+                initNeighbors(node, pid);
+
+
+                if (loadBalancingParameters.cycleDB == 0) {
+                    int randomNumber = (int) (Math.random() * 100);
+                    // ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
+                    ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(loads_sumsList.get(i));
+                    // for testing purposes I am setting the Loads manually
+
+                    /*
+                    if (node.getID() == 0) {
+                        ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
+                    } else if (node.getID() == 1) {
+                        ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(31);
+                    } else if (node.getID() == 2) {
+                        ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(69);
+                    } else {
+                        ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
+                    }
+                    */
+
+                } else {
+                    System.out.println("Parameter for Round " + cycleDB + "\t ID " + node.getID() + " load " + nodeProtocol.getLoad());
+                    String ouputLoad = "ID " + node.getID() + "\t load " + nodeProtocol.getLoad();
+                    writer.println(ouputLoad);
+
+                    // If a neighbor with minimal load is found, send a fair transfer proposal
+                    Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
+
+                    dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
+                    if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
+                        this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
+                        // minLoadNeighborofNodeProtocol.setProposal(this.transferProposal);
+                        sendFairProposal(minLoadNeighborofNodeProtocol, node, this.transferProposal);
+
+                    }
                 }
             }
-        }
-        for (int i = 0; i < Network.size(); i++) {
-            Node node = Network.get(i);
-            dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
-            if (!nodeProtocol.getAllTransferProposals().isEmpty()) {
-                Node maxProposingNode = findMaximalProposingTransfer(node, pid);
-                dealAgreementBasedProtocol maxProposingNodeProtocol = (dealAgreementBasedProtocol) maxProposingNode.getProtocol(pid);
-                double transferValue = (maxProposingNodeProtocol.getLoad() - nodeProtocol.getLoad()) / 2;
+            for (int i = 0; i < Network.size(); i++) {
+                Node node = Network.get(i);
+                dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+                if (!nodeProtocol.getAllTransferProposals().isEmpty()) {
+                    Node maxProposingNode = findMaximalProposingTransfer(node, pid);
+                    dealAgreementBasedProtocol maxProposingNodeProtocol = (dealAgreementBasedProtocol) maxProposingNode.getProtocol(pid);
+                    double transferValue = (maxProposingNodeProtocol.getLoad() - nodeProtocol.getLoad()) / 2;
 
-                updateLoadAfterDeal(node, maxProposingNode, transferValue, pid);
+                    updateLoadAfterDeal(node, maxProposingNode, transferValue, pid);
+                }
             }
+            loadBalancingParameters.cycleDB++;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        loadBalancingParameters.cycleDB++;
 
         return false;
     }
