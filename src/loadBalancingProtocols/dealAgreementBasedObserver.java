@@ -2,13 +2,8 @@ package dealAgreementBased;
 
 import peersim.config.Configuration;
 import peersim.core.*;
-import pushPullSum.PushPullSumProtocol;
-
-import javax.swing.*;
 
 import java.util.Random;
-
-import static peersim.core.CommonState.r;
 
 
 public class dealAgreementBasedObserver implements Control {
