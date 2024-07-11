@@ -87,6 +87,7 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
         this.neighbors.remove(neighbour);
         return true;
     }
+
     public double getValue() {
         return value;
     }

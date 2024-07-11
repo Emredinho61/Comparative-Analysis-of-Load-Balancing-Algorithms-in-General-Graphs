@@ -2,6 +2,7 @@ package dealAgreementBased;
 
 import peersim.config.Configuration;
 import peersim.core.*;
+import pushPullSum.PushPullSumProtocol;
 
 import javax.swing.*;
 
@@ -41,8 +42,9 @@ public class dealAgreementBasedObserver implements Control {
 
             if (dealAgreementBasedParameter.cycle == 0) {
                 int randomNumber = (int) (Math.random() * 100);
-                // ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
+                ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
                 // for testing purposes I am setting the Loads manually
+
                 if(node.getID() == 0){
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
                 } else if (node.getID() == 1) {
@@ -52,6 +54,7 @@ public class dealAgreementBasedObserver implements Control {
                 }else {
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
                 }
+
             } else {
                 // If a neighbor with minimal load is found, send a fair transfer proposal
                 Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
@@ -77,7 +80,7 @@ public class dealAgreementBasedObserver implements Control {
             }
         }
 
-
+        System.out.println("MEAN SQUARED ERROR: " + MeanSquaredError(pid));
         dealAgreementBasedParameter.cycle++;
 
         return false;
@@ -138,7 +141,8 @@ public class dealAgreementBasedObserver implements Control {
         double maxProposal = Double.MIN_VALUE;
         Node maxProposingNode = null;
 
-        dealAgreementBasedProtocol nodeProtocol = ((dealAgreementBasedProtocol) node.getProtocol(protocolID));;
+        dealAgreementBasedProtocol nodeProtocol = ((dealAgreementBasedProtocol) node.getProtocol(protocolID));
+        ;
 
         // now we look in the proposals set for the maximal value
         for (TupleContainer oneTupleContainer : nodeProtocol.getAllTransferProposals()) {
@@ -150,6 +154,29 @@ public class dealAgreementBasedObserver implements Control {
         }
         return maxProposingNode;
 
+    }
+
+    private double calculateNetworksAverage(int pid) {
+        double totalSums = 0.0;
+        for (int i = 0; i < Network.size(); i++) {
+            Node node = Network.get(i);
+            dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+            totalSums += nodeProtocol.getLoad();
+        }
+        return (totalSums / Network.size());
+    }
+
+    private double MeanSquaredError(int pid) {
+        double networkAverage = calculateNetworksAverage(pid);
+        double MSE = 0.0;
+        double avgDif = 0.0;
+        for (int i = 0; i < Network.size(); i++) {
+            Node node = Network.get(i);
+            dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+            avgDif += Math.pow(networkAverage - nodeProtocol.getLoad(), 2);
+        }
+        MSE = avgDif / Network.size();
+        return MSE;
     }
 
     private void updateLoadAfterDeal(Node receivingNode, Node sendingNode, double transferValue, int protocolID) {

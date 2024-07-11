@@ -107,26 +107,29 @@ public class PushPullSumObserver implements Control {
         if (PushPullSumParameter.cycle != 0) {
             for (int i = 0; i < Network.size(); i++) {
                 Node node = Network.get(i);
+                int prevRound = cycle - 1;
                 // we output the Hashcode, Sum and Weight of each Node in each cycle
+                String output = "Parameter for Round " + prevRound + " ID \t" +
+                        Network.get(i).hashCode() +
+                        " sum \t " +
+                        ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getSum() +
+                        " weight \t" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getWeight();
+                System.out.println(output);
                 ((PushPullSumProtocol) node.getProtocol(pid)).setSum(((PushPullSumProtocol) node.getProtocol(pid)).getNewSum());
                 ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(((PushPullSumProtocol) node.getProtocol(pid)).getNewWeight());
                 ((PushPullSumProtocol) node.getProtocol(pid)).resetMessages();
-                String output = "ID \t" +
-                        Network.get(i).hashCode() +
-                        " sum \t " +
-                        ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getNewSum() +
-                        " weight \t" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getNewWeight();
-                System.out.println(output);
+
 
                 // System.out.println("Messages node" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getMessage());
                 // System.out.println("Messages Neighbor" + ((PushPullSumProtocol) nodeNeighbor.getProtocol(pid)).getMessage());
-                System.out.println("Average" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getAverage());
+
+                System.out.println("Average of Round " + prevRound + ": " + +((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getAverage());
                 ((PushPullSumProtocol) node.getProtocol(pid)).resetMessages();
 
                 // writer.println(output);
             }
         }
-
+        System.out.println("MSE for current Round "  + ": " + MeanSquaredError(pid));
         PushPullSumParameter.cycle++;
 
 
@@ -252,6 +255,29 @@ public class PushPullSumObserver implements Control {
 
     private double roundValue(double value) {
         return (double) Math.round(value * 100d) / 100d;
+    }
+
+    private double calculateNetworksAverage(int pid) {
+        double totalSums = 0.0;
+        for (int i = 0; i < Network.size(); i++) {
+            Node node = Network.get(i);
+            PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+            totalSums += nodeProtocol.getNewSum();
+        }
+        return (totalSums / Network.size());
+    }
+
+    private double MeanSquaredError(int pid) {
+        double networkAverage = calculateNetworksAverage(pid);
+        double MSE = 0.0;
+        double avgDif = 0.0;
+        for (int i = 0; i < Network.size(); i++) {
+            Node node = Network.get(i);
+            PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+            avgDif += Math.pow(networkAverage - nodeProtocol.getAverage(), 2);
+        }
+        MSE = avgDif / Network.size();
+        return MSE;
     }
 
     private void aggregateData(PushPullSumProtocol node, int pid) {

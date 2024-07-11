@@ -34,7 +34,6 @@ public class PushPullSumProtocol implements CDProtocol, Linkable {
     public void nextCycle(Node node, int protocolID) {
         resetMessages();
         this.protocolid = node.getID();
-        System.out.println("SUM " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getSum() + "WEIGHT " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getWeight() + "AVERAGE: " + ((PushPullSumProtocol) node.getProtocol(protocolID)).getAverage());
     }
 
     @Override
