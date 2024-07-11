@@ -1,21 +1,16 @@
-package pushPullSum;
+package loadBalancingProtocols;
 
-import dealAgreementBased.dealAgreementBasedProtocol;
 import peersim.config.Configuration;
 import peersim.core.CommonState;
 import peersim.core.Control;
 import peersim.core.Network;
 import peersim.core.Node;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import static java.lang.Math.round;
+import static loadBalancingProtocols.loadBalancingParameters.*;
 import static peersim.core.CommonState.r;
-import static pushPullSum.PushPullSumParameter.cycle;
-import static pushPullSum.PushPullSumParameter.sumsList;
 
 
 public class PushPullSumObserver implements Control {
@@ -37,7 +32,7 @@ public class PushPullSumObserver implements Control {
     @Override
     public boolean execute() {
         boolean converged = false;
-        System.out.println("\n Cycle No " + PushPullSumParameter.cycle);
+        System.out.println("\n Cycle No " + loadBalancingParameters.cyclePPS);
 
         // For now we generate a txt file using the PrintWriter and the FileWriter modules later on we want to
         // use the terminal to get the outputs
@@ -56,7 +51,7 @@ public class PushPullSumObserver implements Control {
             // getNeighborsSet(node, pid);
 
             // For the first cycle we set the initial Sum, Weight And the Set of Messages
-            if (PushPullSumParameter.cycle == 0) {
+            if (loadBalancingParameters.cyclePPS == 0) {
                 initNeighbors(node, pid);
                 // Sum is just a random double for now.
                 // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
@@ -104,10 +99,10 @@ public class PushPullSumObserver implements Control {
             respondToRequests((PushPullSumProtocol) node.getProtocol(pid), pid, ((PushPullSumProtocol) node.getProtocol(pid)).getPushSum(), ((PushPullSumProtocol) node.getProtocol(pid)).getPushWeight());
 
         }
-        if (PushPullSumParameter.cycle != 0) {
+        if (loadBalancingParameters.cyclePPS != 0) {
             for (int i = 0; i < Network.size(); i++) {
                 Node node = Network.get(i);
-                int prevRound = cycle - 1;
+                int prevRound = cyclePPS - 1;
                 // we output the Hashcode, Sum and Weight of each Node in each cycle
                 String output = "Parameter for Round " + prevRound + " ID \t" +
                         Network.get(i).hashCode() +
@@ -129,8 +124,8 @@ public class PushPullSumObserver implements Control {
                 // writer.println(output);
             }
         }
-        System.out.println("MSE for current Round "  + ": " + MeanSquaredError(pid));
-        PushPullSumParameter.cycle++;
+        System.out.println("MSE for current Round " + ": " + MeanSquaredError(pid));
+        loadBalancingParameters.cyclePPS++;
 
 
         return false;

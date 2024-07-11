@@ -1,4 +1,4 @@
-package pushPullSum;
+package loadBalancingProtocols;
 
 import peersim.cdsim.CDProtocol;
 import peersim.core.CommonState;

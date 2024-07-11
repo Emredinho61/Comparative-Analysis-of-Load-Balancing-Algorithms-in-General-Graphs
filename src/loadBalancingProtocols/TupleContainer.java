@@ -1,4 +1,4 @@
-package pushPullSum;
+package loadBalancingProtocols;
 
 public class TupleContainer {
     protected double sum;

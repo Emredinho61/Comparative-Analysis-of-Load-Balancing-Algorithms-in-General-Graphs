@@ -1,5 +1,6 @@
-package dealAgreementBased;
+package loadBalancingProtocols;
 
+import dealAgreementBased.TupleContainer;
 import peersim.config.Configuration;
 import peersim.core.*;
 
@@ -22,7 +23,12 @@ public class dealAgreementBasedObserver implements Control {
 
     @Override
     public boolean execute() {
-        System.out.println("\n Cycle No " + dealAgreementBasedParameter.cycle);
+        System.out.println("\n Cycle No " + loadBalancingParameters.cycleDB);
+        if (loadBalancingParameters.cycleDB == 0) {
+            System.out.println(" ");
+        } else {
+            System.out.println("MEAN SQUARED ERROR: " + MeanSquaredError(pid));
+        }
 
         for (int i = 0; i < Network.size(); i++) {
             int MIN_LOWER = 0;
@@ -35,22 +41,24 @@ public class dealAgreementBasedObserver implements Control {
             initNeighbors(node, pid);
 
 
-            if (dealAgreementBasedParameter.cycle == 0) {
+            if (loadBalancingParameters.cycleDB == 0) {
                 int randomNumber = (int) (Math.random() * 100);
                 ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
                 // for testing purposes I am setting the Loads manually
 
-                if(node.getID() == 0){
+                if (node.getID() == 0) {
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
                 } else if (node.getID() == 1) {
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(31);
                 } else if (node.getID() == 2) {
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(69);
-                }else {
+                } else {
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
                 }
 
             } else {
+                System.out.println("Node: " + node.getID() + " load: " + nodeProtocol.getLoad());
+
                 // If a neighbor with minimal load is found, send a fair transfer proposal
                 Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
 
@@ -75,8 +83,7 @@ public class dealAgreementBasedObserver implements Control {
             }
         }
 
-        System.out.println("MEAN SQUARED ERROR: " + MeanSquaredError(pid));
-        dealAgreementBasedParameter.cycle++;
+        loadBalancingParameters.cycleDB++;
 
         return false;
     }

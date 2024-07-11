@@ -1,7 +1,6 @@
-package pushPullSum;
+package loadBalancingProtocols;
 
 import peersim.cdsim.CDProtocol;
-import peersim.config.FastConfig;
 import peersim.core.Linkable;
 import peersim.core.Node;
 

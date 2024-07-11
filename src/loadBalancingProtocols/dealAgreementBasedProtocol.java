@@ -1,14 +1,11 @@
-package dealAgreementBased;
+package loadBalancingProtocols;
 
+import dealAgreementBased.TupleContainer;
 import peersim.cdsim.CDProtocol;
-import peersim.config.FastConfig;
-import peersim.core.CommonState;
 import peersim.core.Linkable;
-import peersim.core.Network;
 import peersim.core.Node;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
@@ -17,7 +14,7 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
     protected double load;
     protected double transferProposal;
 
-    Set<TupleContainer> transferProposals = new HashSet<>();
+    Set<dealAgreementBased.TupleContainer> transferProposals = new HashSet<>();
 
     protected Set<Node> neighbors = new HashSet<>();
 
@@ -28,7 +25,6 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
 
     @Override
     public void nextCycle(Node node, int protocolID) {
-        System.out.println("Node " + node.getID() + " Load: " + getLoad());
         resetTransferProposals();
     }
 
@@ -135,7 +131,7 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
     }
 
     public void addToTransferProposalsSet(Node proposingNode, double transferProposal) {
-        this.transferProposals.add(new TupleContainer(proposingNode, transferProposal));
+        this.transferProposals.add(new dealAgreementBased.TupleContainer(proposingNode, transferProposal));
     }
 
     public Set<TupleContainer> getAllTransferProposals() {
