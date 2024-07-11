@@ -6,6 +6,8 @@ import peersim.core.*;
 
 import java.util.Random;
 
+import static loadBalancingProtocols.loadBalancingParameters.loads_sumsList;
+
 
 public class dealAgreementBasedObserver implements Control {
     private static final String PAR_PROT = "protocol";
@@ -18,6 +20,13 @@ public class dealAgreementBasedObserver implements Control {
     public dealAgreementBasedObserver(String name) {
         pid = Configuration.getPid(name + "." + PAR_PROT);
         k = Configuration.getInt(name + "." + PAR_K);
+        for (int i = 0; i < Network.size(); i++) {
+            int MIN_LOWER = 0;
+            int MAX_UPPER = 100;
+            Random r = new Random();
+            double randomNumber = r.nextInt(MAX_UPPER - MIN_LOWER) + MIN_LOWER;
+            loads_sumsList.add(randomNumber);
+        }
 
     }
 
@@ -43,9 +52,11 @@ public class dealAgreementBasedObserver implements Control {
 
             if (loadBalancingParameters.cycleDB == 0) {
                 int randomNumber = (int) (Math.random() * 100);
-                ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
+                // ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
+                ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(loads_sumsList.get(i));
                 // for testing purposes I am setting the Loads manually
 
+                /*
                 if (node.getID() == 0) {
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
                 } else if (node.getID() == 1) {
@@ -55,6 +66,7 @@ public class dealAgreementBasedObserver implements Control {
                 } else {
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
                 }
+                 */
 
             } else {
                 System.out.println("Node: " + node.getID() + " load: " + nodeProtocol.getLoad());

@@ -19,14 +19,6 @@ public class PushPullSumObserver implements Control {
 
     public PushPullSumObserver(String name) {
         pid = Configuration.getPid(name + "." + PAR_PROT);
-        for (int i = 0; i < Network.size(); i++) {
-            int MIN_LOWER = 0;
-            int MAX_UPPER = 100;
-            Random r = new Random();
-            double randomNumber = r.nextInt(MAX_UPPER - MIN_LOWER) + MIN_LOWER;
-            sumsList.add(randomNumber);
-        }
-
     }
 
     @Override
@@ -55,11 +47,11 @@ public class PushPullSumObserver implements Control {
                 initNeighbors(node, pid);
                 // Sum is just a random double for now.
                 // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
-                ((PushPullSumProtocol) node.getProtocol(pid)).setSum(sumsList.get(i));
-                ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(sumsList.get(i));
+                ((PushPullSumProtocol) node.getProtocol(pid)).setSum(loads_sumsList.get(i));
+                ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(loads_sumsList.get(i));
 
                 // For testing purposes we set the Sums manually
-
+                /*
                 if (node.getID() == 0) {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(10);
@@ -73,7 +65,7 @@ public class PushPullSumObserver implements Control {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(10);
                 }
-
+                */
                 // initial weight is 1, sum of all weights is n (number of nodes in the network)
                 ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(1);
                 ((PushPullSumProtocol) node.getProtocol(pid)).setNewWeight(1);
