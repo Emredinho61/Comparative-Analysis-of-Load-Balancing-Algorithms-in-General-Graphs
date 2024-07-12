@@ -37,13 +37,11 @@ public class dealAgreementBasedObserver implements Control {
 
     @Override
     public boolean execute() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("terminalOutput.txt", true), false)) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(String.format("simulationResults/terminalOutput_DAB_%d.txt", Network.size()), true), false)) {
             System.out.println("\n Cycle No " + loadBalancingParameters.cycleDB);
             if (loadBalancingParameters.cycleDB == 0) {
                 System.out.println(" ");
             } else {
-                String ouput = "###################################### Deal Agreement Based Protocol ######################################";
-                writer.println(ouput);
                 String outpuCycle = "Cycle No.: " + loadBalancingParameters.cycleDB;
                 writer.println(outpuCycle);
                 System.out.println("MSE: " + MeanSquaredError(pid));
@@ -59,6 +57,7 @@ public class dealAgreementBasedObserver implements Control {
 
                 Node node = Network.get(i);
                 dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+                // For fully connecting use:
                 initNeighbors(node, pid);
 
 
@@ -117,6 +116,10 @@ public class dealAgreementBasedObserver implements Control {
     }
 
     private void initNeighbors(Node node, int pid) {
+        /*
+        Fully connecting the Graph
+         */
+
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
         for (int i = 0; i < Network.size(); i++) {
             Node neighbor = Network.get(i);

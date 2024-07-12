@@ -30,13 +30,14 @@ public class PushPullSumObserver implements Control {
 
         // For now we generate a txt file using the PrintWriter and the FileWriter modules later on we want to
         // use the terminal to get the outputs
-        try (PrintWriter writer = new PrintWriter(new FileWriter("terminalOutput.txt", true), false)) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(String.format("simulationResults/terminalOutput_PPS_%d.txt", Network.size()), true), false)) {
             System.out.println("\n Cycle No " + loadBalancingParameters.cyclePPS);
             if (loadBalancingParameters.cyclePPS != 0) {
-                String ouputHeader = "###################################### Push Pull Sum Protocol ######################################";
-                writer.println(ouputHeader);
                 String outpuCycle = "Cycle No.: " + cyclePPS;
                 writer.println(outpuCycle);
+            } else {
+                String outputConfig = "Config: Fully Connected Graph";
+                writer.println(outputConfig);
             }
             for (int i = 0; i < Network.size(); i++) {
                 int MIN_LOWER = 0;
