@@ -36,7 +36,7 @@ public class PushPullSumObserver implements Control {
                 String outpuCycle = "Cycle No.: " + cyclePPS;
                 writer.println(outpuCycle);
             } else {
-                String outputConfig = "Config: Fully Connected Graph";
+                String outputConfig = "Config: " + Network.size() + " Fully Connected Graph";
                 writer.println(outputConfig);
             }
             for (int i = 0; i < Network.size(); i++) {
@@ -56,7 +56,7 @@ public class PushPullSumObserver implements Control {
                 // For the first cycle we set the initial Sum, Weight And the Set of Messages
                 if (loadBalancingParameters.cyclePPS == 0) {
 
-                    initNeighbors(node, pid);
+                    initNeighborsFullyConnect(node, pid);
                     // Sum is just a random double for now.
                     // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(loads_sumsList.get(i));
@@ -143,7 +143,7 @@ public class PushPullSumObserver implements Control {
         return false;
     }
 
-    private void initNeighbors(Node node, int pid) {
+    private void initNeighborsFullyConnect(Node node, int pid) {
         // connecting the graph such that it is a complete (fully connected grpah)
         PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
         for (int i = 0; i < Network.size(); i++) {

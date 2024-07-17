@@ -122,8 +122,8 @@ public class dealAgreementBasedProtocol implements CDProtocol, Linkable {
         return this.neighbors;
     }
 
-    public Set<Node> resetNeighbors() {
-        return new HashSet<>();
+    public void resetNeighbors() {
+        this.neighbors = new HashSet<>();
     }
 
     public void addNewNeighbors(Node node) {
