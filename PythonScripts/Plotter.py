@@ -51,21 +51,22 @@ class Plotter:
         PPS_PLot = plt.plot([oneRound for oneRound in range(0, len(MSE_Rounds_PPS[0]) + 1, 1)],
                             [float(oneMSE) for oneMSE in MSE_Rounds_PPS[1][0:50:1]], label="PPS")
         plt.setp(PPS_PLot, color='g', linewidth=linewidth)
+        plt.yscale('log')
         plt.xlabel("Rounds")
         plt.ylabel("Mean Squared Error")
         plt.title(f"Mean Squared Error per Round - Networksize {self.networksize} {self.networktype}")
         leg = plt.legend(loc='upper center')
         # plt.show()
         abbreviation = self.abbreviate_networktype()
-        plt.savefig(f"DAB_vs_PPS_{abbreviation}_r50_n{self.networksize}", transparent=None, dpi=700, format=None,
+        plt.savefig(f"Plots/DAB_vs_PPS_{abbreviation}_r50_n{self.networksize}", transparent=None, dpi=700, format=None,
                     metadata=None, bbox_inches=None, pad_inches=0.1,
                     facecolor='auto', edgecolor='auto', backend=None,
                     )
 
 
 if __name__ == "__main__":
-    file1 = "../simulationResults/terminalOutput_DAB_1000.txt"
-    file2 = "../simulationResults/terminalOutput_PPS_1000.txt"
+    file1 = "../simulationResults/terminalOutput_DAB_10000.txt"
+    file2 = "../simulationResults/terminalOutput_PPS_10000.txt"
     plotter_instance = Plotter(
         [file1, file2])
 

@@ -61,8 +61,8 @@ public class dealAgreementBasedObserver implements Control {
                 // End Of fully connecting
 
                 // For Grid use:
-                nodeProtocol.resetNeighbors();
-                initNeighborsGrid(node, pid, 2, 2);
+                // nodeProtocol.resetNeighbors();
+                // initNeighborsGrid(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
                 // END of Grid code
 
                 if (loadBalancingParameters.cycleDB == 0) {
@@ -102,7 +102,6 @@ public class dealAgreementBasedObserver implements Control {
             for (int i = 0; i < Network.size(); i++) {
                 Node node = Network.get(i);
                 dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
-                System.out.println("node " + node.getID() + " Neighbbors" + nodeProtocol.getNeighbors().size());
                 if (!nodeProtocol.getAllTransferProposals().isEmpty()) {
                     Node maxProposingNode = findMaximalProposingTransfer(node, pid);
                     dealAgreementBasedProtocol maxProposingNodeProtocol = (dealAgreementBasedProtocol) maxProposingNode.getProtocol(pid);
@@ -142,8 +141,7 @@ public class dealAgreementBasedObserver implements Control {
         Node minLoadNeighbor = null;
 
         // we look in the neighbors Set for the minimal Load
-        for (int i = 0; i < nodeProtocol.degree(); i++) {
-            Node neighbor = nodeProtocol.getNeighbor(i);
+        for (Node neighbor : nodeProtocol.getNeighbors()) {
             dealAgreementBasedProtocol neighborProtocol = (dealAgreementBasedProtocol) neighbor.getProtocol(pid);
             if (neighborProtocol.getLoad() < minLoad) {
                 // update minload and minLoadNeighbor if previous minimum is bigger than current nodes load
@@ -228,33 +226,6 @@ public class dealAgreementBasedObserver implements Control {
         }
     }
 
-    private int getGridRang(double nodeId, int m_height, int n_width) {
-        for (int i = 1; i <= m_height; i++) {
-            if (i * n_width > nodeId) {
-                return i;
-            }
-        }
-        return 1;
-    }
-
-    /*
-    private void initNeighborsGrid(Node node, int pid, int m_height, int n_width) {
-        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
-        if ((m_height * n_width) != Network.size()) {
-            System.out.println("(m, n)-Grid must adhere to networksize");
-        } else {
-            if (node.getID() + 1 < Network.size() && node.getID() < getGridRang(node.getID(), m_height, n_width) * n_width) {
-                Node neighbor = Network.get((int) node.getID() + 1);
-                nodeProtocol.addNeighbor(neighbor);
-            }
-            if (node.getID() + n_width < Network.size()) {
-                Node neighbor2 = Network.get((int) node.getID() + n_width);
-                nodeProtocol.addNeighbor(neighbor2);
-            }
-
-        }
-    }
-     */
     private void initNeighborsGrid(Node node, int pid, int m_height, int n_width) {
         int nodeId = (int) node.getID();
         int row = nodeId / n_width;

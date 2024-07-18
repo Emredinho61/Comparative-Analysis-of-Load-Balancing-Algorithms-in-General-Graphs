@@ -9,6 +9,8 @@ import peersim.core.Node;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static java.lang.Math.round;
@@ -22,6 +24,15 @@ public class PushPullSumObserver implements Control {
 
     public PushPullSumObserver(String name) {
         pid = Configuration.getPid(name + "." + PAR_PROT);
+        /*
+        for (int i = 0; i < Network.size(); i++) {
+            int MIN_LOWER = 0;
+            int MAX_UPPER = 100;
+            Random r = new Random();
+            double randomNumber = r.nextInt(MAX_UPPER - MIN_LOWER) + MIN_LOWER;
+            loads_sumsList.add(randomNumber);
+        }
+         */
     }
 
     @Override
@@ -36,7 +47,8 @@ public class PushPullSumObserver implements Control {
                 String outpuCycle = "Cycle No.: " + cyclePPS;
                 writer.println(outpuCycle);
             } else {
-                String outputConfig = "Config: " + Network.size() + " Fully Connected Graph";
+                String outputConfig = "Config: " + Network.size() + String.format(" Grid Graph %dx%d", m_height, n_width);
+                // String outputConfig = "Config: " + Network.size() + " Fully Connected Graph";
                 writer.println(outputConfig);
             }
             for (int i = 0; i < Network.size(); i++) {
@@ -56,7 +68,15 @@ public class PushPullSumObserver implements Control {
                 // For the first cycle we set the initial Sum, Weight And the Set of Messages
                 if (loadBalancingParameters.cyclePPS == 0) {
 
-                    initNeighborsFullyConnect(node, pid);
+                    // For Fully Connected:
+                    // initNeighborsFullyConnect(node, pid);
+                    // End Of Fully Connected
+
+                    // For Grid:
+                    ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    initNeighborsGrid(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
+                    // End of Grid
+
                     // Sum is just a random double for now.
                     // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(loads_sumsList.get(i));
@@ -77,7 +97,8 @@ public class PushPullSumObserver implements Control {
                         ((PushPullSumProtocol) node.getProtocol(pid)).setSum(10);
                         ((PushPullSumProtocol) node.getProtocol(pid)).setNewSum(10);
                     }
-                    */
+                     */
+
 
                     // initial weight is 1, sum of all weights is n (number of nodes in the network)
                     ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(1);
@@ -120,10 +141,6 @@ public class PushPullSumObserver implements Control {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(((PushPullSumProtocol) node.getProtocol(pid)).getNewWeight());
                     ((PushPullSumProtocol) node.getProtocol(pid)).resetMessages();
 
-
-                    // System.out.println("Messages node" + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getMessage());
-                    // System.out.println("Messages Neighbor" + ((PushPullSumProtocol) nodeNeighbor.getProtocol(pid)).getMessage());
-
                     System.out.println("Average  " + prevRound + ": " + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getAverage());
                     String outputAverage = "\t Average " + +((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getAverage();
                     ((PushPullSumProtocol) node.getProtocol(pid)).resetMessages();
@@ -141,19 +158,6 @@ public class PushPullSumObserver implements Control {
             e.printStackTrace();
         }
         return false;
-    }
-
-    private void initNeighborsFullyConnect(Node node, int pid) {
-        // connecting the graph such that it is a complete (fully connected grpah)
-        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
-        for (int i = 0; i < Network.size(); i++) {
-            Node neighbor = Network.get(i);
-            if (!node.equals(neighbor)) {
-                nodeProtocol.addNeighbor(neighbor);
-            } else {
-                nodeProtocol.removeNeighbor(neighbor);
-            }
-        }
     }
 
     private static boolean areEqualUpToNDecimalPlaces(double value1, double value2, int decimalPlaces) {
@@ -186,9 +190,10 @@ public class PushPullSumObserver implements Control {
         Procedure RequestData of the pseudocode in the Paper "Adding Pull to Push Sum for Approximate Data Aggregation"
          */
         PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(protocolID);
-        int randomID = r.nextInt(Network.size());
+        List<Node> nodeList = new ArrayList<>(nodeProtocol.getReceivedNodes());
+        int randomID = r.nextInt(nodeList.size());
         if (randomID != node.getID()) {
-            Node neighbor = Network.get(randomID);
+            Node neighbor = nodeProtocol.getNeighbor(randomID);
             PushPullSumProtocol neighborProtocol = (PushPullSumProtocol) neighbor.getProtocol(protocolID);
 
             // send (sum / 2) and (weight / 2)  to ourselves
@@ -294,5 +299,52 @@ public class PushPullSumObserver implements Control {
         // set the average which is defined as s_u/w_u at time t
         node.setAverage(node.getSum() / node.getWeight());
         // node.resetMessages();
+    }
+
+    // Methods for connecting different Network Types
+    private void initNeighborsFullyConnect(Node node, int pid) {
+        // connecting the graph such that it is a complete (fully connected grpah)
+        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+        for (int i = 0; i < Network.size(); i++) {
+            Node neighbor = Network.get(i);
+            if (!node.equals(neighbor)) {
+                nodeProtocol.addNeighbor(neighbor);
+            } else {
+                nodeProtocol.removeNeighbor(neighbor);
+            }
+        }
+    }
+
+    private void initNeighborsGrid(Node node, int pid, int m_height, int n_width) {
+        int nodeId = (int) node.getID();
+        int row = nodeId / n_width;
+        int col = nodeId % n_width;
+
+        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+
+        // Add right neighbor
+        if (col + 1 < n_width) {
+            Node neighbor = Network.get(nodeId + 1);
+            nodeProtocol.addNeighbor(neighbor);
+        }
+
+        // Add bottom neighbor
+        if (row + 1 < m_height) {
+            Node neighbor = Network.get(nodeId + n_width);
+            nodeProtocol.addNeighbor(neighbor);
+        }
+
+        // Add left neighbor
+        if (col - 1 >= 0) {
+            Node neighbor = Network.get(nodeId - 1);
+            nodeProtocol.addNeighbor(neighbor);
+        }
+
+        // Add top neighbor
+        if (row - 1 >= 0) {
+            Node neighbor = Network.get(nodeId - n_width);
+            nodeProtocol.addNeighbor(neighbor);
+        }
+
     }
 }
