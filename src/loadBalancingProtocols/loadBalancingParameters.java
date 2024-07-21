@@ -9,4 +9,6 @@ public class loadBalancingParameters {
     public static List<Double> loads_sumsList = new ArrayList<Double>();
     public static int m_height = 100;
     public static int n_width = 100;
+    public static int m_cliqueSize = 9500;
+    public static int n_PathSize = 500;
 }

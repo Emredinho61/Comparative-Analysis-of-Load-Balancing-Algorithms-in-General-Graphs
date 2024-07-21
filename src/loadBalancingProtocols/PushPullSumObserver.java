@@ -32,7 +32,7 @@ public class PushPullSumObserver implements Control {
             double randomNumber = r.nextInt(MAX_UPPER - MIN_LOWER) + MIN_LOWER;
             loads_sumsList.add(randomNumber);
         }
-         */
+        */
     }
 
     @Override
@@ -47,7 +47,8 @@ public class PushPullSumObserver implements Control {
                 String outpuCycle = "Cycle No.: " + cyclePPS;
                 writer.println(outpuCycle);
             } else {
-                String outputConfig = "Config: " + Network.size() + String.format(" Grid Graph %dx%d", m_height, n_width);
+                String outputConfig = "Config: " + Network.size() + String.format(" Lollipop Graph %dx%d", m_cliqueSize, n_PathSize);
+                // String outputConfig = "Config: " + Network.size() + String.format(" Grid Graph %dx%d", m_height, n_width);
                 // String outputConfig = "Config: " + Network.size() + " Fully Connected Graph";
                 writer.println(outputConfig);
             }
@@ -73,9 +74,14 @@ public class PushPullSumObserver implements Control {
                     // End Of Fully Connected
 
                     // For Grid:
-                    ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
-                    initNeighborsGrid(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
+                    // ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    // initNeighborsGrid(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
                     // End of Grid
+
+                    // For Lollipop Graph Use:
+                    ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    initLollipopGraph(node, pid, loadBalancingParameters.m_cliqueSize, n_PathSize);
+                    // End of Lollipop Graph
 
                     // Sum is just a random double for now.
                     // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
@@ -319,32 +325,59 @@ public class PushPullSumObserver implements Control {
         int nodeId = (int) node.getID();
         int row = nodeId / n_width;
         int col = nodeId % n_width;
-
         PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
-
         // Add right neighbor
         if (col + 1 < n_width) {
             Node neighbor = Network.get(nodeId + 1);
             nodeProtocol.addNeighbor(neighbor);
         }
-
         // Add bottom neighbor
         if (row + 1 < m_height) {
             Node neighbor = Network.get(nodeId + n_width);
             nodeProtocol.addNeighbor(neighbor);
         }
-
         // Add left neighbor
         if (col - 1 >= 0) {
             Node neighbor = Network.get(nodeId - 1);
             nodeProtocol.addNeighbor(neighbor);
         }
-
         // Add top neighbor
         if (row - 1 >= 0) {
             Node neighbor = Network.get(nodeId - n_width);
             nodeProtocol.addNeighbor(neighbor);
         }
+    }
 
+    private void initLollipopGraph(Node node, int pid, int m_cliqueSize, int n_pathSize) {
+        // links a Lollipop Graph with cliquesize of m and pathsize of n
+        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+        double nodeId = node.getID();
+        if (m_cliqueSize + n_pathSize != Network.size()) {
+            System.out.println("Sum of Clique size and Path size do not match Network size");
+        } else if (nodeId == 0) {
+            // to one side for the first node we link a path
+            nodeProtocol.addNeighbor(Network.get(1));
+            // to the other side a clique is linked
+            for (int i = m_cliqueSize + 1; i < Network.size(); i++) {
+                nodeProtocol.addNeighbor(Network.get(i));
+            }
+        } else if (nodeId > 0 && nodeId <= n_pathSize - 1) {
+            // previous and next nodes are added to neihbors
+            nodeProtocol.addNeighbor(Network.get((int) nodeId + 1));
+            nodeProtocol.addNeighbor(Network.get((int) nodeId - 1));
+        } else if (nodeId == n_pathSize) {
+            // for last path element we do not need to connect it to next element
+            nodeProtocol.addNeighbor(Network.get((int) nodeId - 1));
+        } else {
+            // clique linking
+            for (int i = m_cliqueSize + 1; i < Network.size(); i++) {
+                nodeProtocol.addNeighbor(Network.get(0));
+                for (int j = m_cliqueSize + 1; j < Network.size(); j++) {
+                    if (i != nodeId && j != nodeId && i != j) {
+                        nodeProtocol.addNeighbor(Network.get(j));
+                    }
+                }
+            }
+        }
     }
 }

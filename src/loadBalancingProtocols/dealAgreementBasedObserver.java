@@ -65,6 +65,11 @@ public class dealAgreementBasedObserver implements Control {
                 // initNeighborsGrid(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
                 // END of Grid code
 
+                // For Lollipop Graph use:
+                nodeProtocol.resetNeighbors();
+                initLollipopGraph(node, pid, loadBalancingParameters.m_cliqueSize, loadBalancingParameters.n_PathSize);
+                // END of Lolliopop Graph
+
                 if (loadBalancingParameters.cycleDB == 0) {
                     int randomNumber = (int) (Math.random() * 100);
                     // ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
@@ -86,7 +91,6 @@ public class dealAgreementBasedObserver implements Control {
                     System.out.println("Parameter for Round " + cycleDB + "\t ID " + node.getID() + " load " + nodeProtocol.getLoad());
                     String ouputLoad = "ID " + node.getID() + "\t load " + nodeProtocol.getLoad();
                     writer.println(ouputLoad);
-
                     // If a neighbor with minimal load is found, send a fair transfer proposal
                     Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
 
@@ -214,7 +218,6 @@ public class dealAgreementBasedObserver implements Control {
         /*
         Fully connecting the Graph
          */
-
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
         for (int i = 0; i < Network.size(); i++) {
             Node neighbor = Network.get(i);
@@ -227,35 +230,76 @@ public class dealAgreementBasedObserver implements Control {
     }
 
     private void initNeighborsGrid(Node node, int pid, int m_height, int n_width) {
+        // links a (m,n)-Grid with m being the height and n being the width
         int nodeId = (int) node.getID();
         int row = nodeId / n_width;
         int col = nodeId % n_width;
-
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
-
         // Add right neighbor
         if (col + 1 < n_width) {
             Node neighbor = Network.get(nodeId + 1);
             nodeProtocol.addNeighbor(neighbor);
         }
-
         // Add bottom neighbor
         if (row + 1 < m_height) {
             Node neighbor = Network.get(nodeId + n_width);
             nodeProtocol.addNeighbor(neighbor);
         }
-
         // Add left neighbor
         if (col - 1 >= 0) {
             Node neighbor = Network.get(nodeId - 1);
             nodeProtocol.addNeighbor(neighbor);
         }
-
         // Add top neighbor
         if (row - 1 >= 0) {
             Node neighbor = Network.get(nodeId - n_width);
             nodeProtocol.addNeighbor(neighbor);
         }
-
     }
+
+    private void initLollipopGraph(Node node, int pid, int m_cliqueSize, int n_pathSize) {
+        // links a Lollipop Graph with cliquesize of m and pathsize of n
+        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+        double nodeId = node.getID();
+        if (m_cliqueSize + n_pathSize != Network.size()) {
+            System.out.println("Sum of Clique size and Path size do not match Network size");
+        } else if (nodeId == 0) {
+            // to one side for the first node we link a path
+            nodeProtocol.addNeighbor(Network.get(1));
+            // to the other side a clique is linked
+            for (int i = m_cliqueSize + 1; i < Network.size(); i++) {
+                nodeProtocol.addNeighbor(Network.get(i));
+            }
+        } else if (nodeId > 0 && nodeId <= n_pathSize - 1) {
+            // previous and next nodes are added to neihbors
+            nodeProtocol.addNeighbor(Network.get((int) nodeId + 1));
+            nodeProtocol.addNeighbor(Network.get((int) nodeId - 1));
+        } else if (nodeId == n_pathSize) {
+            // for last path element we do not need to connect it to next element
+            nodeProtocol.addNeighbor(Network.get((int) nodeId - 1));
+        } else {
+            // clique linking
+            for (int i = m_cliqueSize + 1; i < Network.size(); i++) {
+                nodeProtocol.addNeighbor(Network.get(0));
+                for (int j = m_cliqueSize + 1; j < Network.size(); j++) {
+                    if (i != nodeId && j != nodeId && i != j) {
+                        nodeProtocol.addNeighbor(Network.get(j));
+                    }
+                }
+            }
+        }
+    }
+
+    private void initStar(Node node, int pid) {
+        // links a star graph with one central node (Node with ID 0)
+        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+        if (node.getID() == 0) {
+            for (int i = 1; i < Network.size(); i++) {
+                nodeProtocol.addNeighbor(Network.get(i));
+            }
+        } else {
+            nodeProtocol.addNeighbor(Network.get(0));
+        }
+    }
+
 }
