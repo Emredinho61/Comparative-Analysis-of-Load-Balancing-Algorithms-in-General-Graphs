@@ -53,9 +53,9 @@ public class dealAgreementBasedObserver implements Control {
                 int MAX_UPPER = 100;
                 Random r = new Random();
 
-
                 Node node = Network.get(i);
                 dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+
                 // For fully connecting use:
                 // initNeighborsFullyConnect(node, pid);
                 // End Of fully connecting
@@ -66,15 +66,32 @@ public class dealAgreementBasedObserver implements Control {
                 // END of Grid code
 
                 // For Lollipop Graph use:
-                nodeProtocol.resetNeighbors();
-                initLollipopGraph(node, pid, loadBalancingParameters.m_cliqueSize, loadBalancingParameters.n_PathSize);
+                // nodeProtocol.resetNeighbors();
+                // initLollipopGraph(node, pid, loadBalancingParameters.m_cliqueSize, loadBalancingParameters.n_PathSize);
                 // END of Lolliopop Graph
 
+                // For Star Graph implementation:
+                // nodeProtocol.resetNeighbors();
+                // initStar(node, pid);
+                // END of Star Graph
+
+                // For Star Graph implementation:
+                // nodeProtocol.resetNeighbors();
+                // initChain(node, pid);
+                // END of Star Graph
+
+                // For Ring of Cliques use:
+                nodeProtocol.resetNeighbors();
+                initRingOfClique(node, pid, loadBalancingParameters.m_RingSize, loadBalancingParameters.n_CliqueSize);
+                // END of Ring of Clique Graoh
+
                 if (loadBalancingParameters.cycleDB == 0) {
+
                     int randomNumber = (int) (Math.random() * 100);
                     // ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(randomNumber);
                     ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(loads_sumsList.get(i));
                     // for testing purposes I am setting the Loads manually
+
                     /*
                     if (node.getID() == 0) {
                         ((dealAgreementBasedProtocol) node.getProtocol(pid)).setLoad(10);
@@ -93,7 +110,7 @@ public class dealAgreementBasedObserver implements Control {
                     writer.println(ouputLoad);
                     // If a neighbor with minimal load is found, send a fair transfer proposal
                     Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
-
+                    System.out.println("Neighbor of node " + node.getID() + " Nei" + nodeProtocol.getNeighbors());
                     dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
                     if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
                         this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
@@ -295,10 +312,53 @@ public class dealAgreementBasedObserver implements Control {
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
         if (node.getID() == 0) {
             for (int i = 1; i < Network.size(); i++) {
+                // node 0 is linked to all the other neighors
                 nodeProtocol.addNeighbor(Network.get(i));
             }
         } else {
+            // all nodes are neighbors of node 0 except node 0
             nodeProtocol.addNeighbor(Network.get(0));
+        }
+    }
+
+    private void initChain(Node node, int pid) {
+        // links a  closed (last and first node are connected) chain (path graph)
+        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+        double nodeID = node.getID();
+
+        // draw a closed chain
+        if (nodeID == 0 && Network.size() >= 2) {
+            nodeProtocol.addNeighbor(Network.get(1));
+            nodeProtocol.addNeighbor(Network.get(Network.size() - 1));
+        } else if (nodeID > 0 && nodeID != Network.size() - 1) {
+            // adding prev. and following neighbors
+            nodeProtocol.addNeighbor(Network.get((int) nodeID + 1));
+            nodeProtocol.addNeighbor(Network.get((int) nodeID - 1));
+        } else {
+            // last node
+            nodeProtocol.addNeighbor(Network.get((int) nodeID - 1));
+            // if network is closed then the first and last nodes are connected
+            nodeProtocol.addNeighbor(Network.get(0));
+        }
+    }
+
+    private void initRingOfClique(Node node, int pid, int ringSize, int cliqueSize) {
+        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+        int nodeId = (int) node.getID();
+        for (int i = 0; i < ringSize; i++) {
+            if (nodeId == 0 && Network.size() > 2) {
+                // next and last node are connected to first node
+                nodeProtocol.addNeighbor(Network.get(1));
+                nodeProtocol.addNeighbor(Network.get(ringSize - 1));
+            } else if (nodeId == ringSize - 1) {
+                // last node is connected to previous and first node
+                nodeProtocol.addNeighbor(Network.get(nodeId - 1));
+                nodeProtocol.addNeighbor(Network.get(0));
+            } else {
+                // add previous and next nodes
+                nodeProtocol.addNeighbor(Network.get(nodeId - 1));
+                nodeProtocol.addNeighbor(Network.get(nodeId + 1));
+            }
         }
     }
 

@@ -47,7 +47,9 @@ public class PushPullSumObserver implements Control {
                 String outpuCycle = "Cycle No.: " + cyclePPS;
                 writer.println(outpuCycle);
             } else {
-                String outputConfig = "Config: " + Network.size() + String.format(" Lollipop Graph %dx%d", m_cliqueSize, n_PathSize);
+                String outputConfig = "Config: " + Network.size() + " Closed Chain Graph";
+                // String outputConfig = "Config: " + Network.size() + " Star Graph";
+                // String outputConfig = "Config: " + Network.size() + String.format(" Lollipop Graph %dx%d", m_cliqueSize, n_PathSize);
                 // String outputConfig = "Config: " + Network.size() + String.format(" Grid Graph %dx%d", m_height, n_width);
                 // String outputConfig = "Config: " + Network.size() + " Fully Connected Graph";
                 writer.println(outputConfig);
@@ -79,9 +81,19 @@ public class PushPullSumObserver implements Control {
                     // End of Grid
 
                     // For Lollipop Graph Use:
-                    ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
-                    initLollipopGraph(node, pid, loadBalancingParameters.m_cliqueSize, n_PathSize);
+                    // ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    // initLollipopGraph(node, pid, loadBalancingParameters.m_cliqueSize, n_PathSize);
                     // End of Lollipop Graph
+
+                    // For Star Graph Use:
+                    // ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    // initStar(node, pid);
+                    // End of Star Graph
+
+                    // For Chain Graph
+                    // ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    // initChain(node, pid);
+                    // End of Chain
 
                     // Sum is just a random double for now.
                     // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
@@ -111,14 +123,11 @@ public class PushPullSumObserver implements Control {
                     ((PushPullSumProtocol) node.getProtocol(pid)).setNewWeight(1);
 
                     // Messages are Tuples of Sums and Weights of each node
-                    String outputSumWeight = "ID " +
-                            Network.get(i).hashCode() +
-                            "\t sum " +
-                            ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getNewSum() +
-                            "\t weight " + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getNewWeight();
+                    String outputSumWeight = "ID " + Network.get(i).hashCode() + "\t sum " + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getNewSum() + "\t weight " + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getNewWeight();
                     System.out.println(outputSumWeight);
 
                 } else {
+                    // System.out.println("Node " + node.getID() + " Neighbor " + ((PushPullSumProtocol) node.getProtocol(pid)).getReceivedNodes());
                     ((PushPullSumProtocol) node.getProtocol(pid)).setPushSum(((PushPullSumProtocol) node.getProtocol(pid)).getSum() / 2);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setPushWeight(((PushPullSumProtocol) node.getProtocol(pid)).getWeight() / 2);
                     // System.out.println("PushSum " + ((PushPullSumProtocol) node.getProtocol(pid)).getPushSum() + " PushWeight " + ((PushPullSumProtocol) node.getProtocol(pid)).getPushWeight());
@@ -137,11 +146,7 @@ public class PushPullSumObserver implements Control {
                     Node node = Network.get(i);
                     int prevRound = cyclePPS - 1;
                     // we output the Hashcode, Sum and Weight of each Node in each cycle
-                    String outputSumWeight = "ID " +
-                            Network.get(i).hashCode() +
-                            "\t sum " +
-                            ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getSum() +
-                            "\t weight " + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getWeight();
+                    String outputSumWeight = "ID " + Network.get(i).hashCode() + "\t sum " + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getSum() + "\t weight " + ((PushPullSumProtocol) Network.get(i).getProtocol(pid)).getWeight();
                     System.out.println(outputSumWeight);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setSum(((PushPullSumProtocol) node.getProtocol(pid)).getNewSum());
                     ((PushPullSumProtocol) node.getProtocol(pid)).setWeight(((PushPullSumProtocol) node.getProtocol(pid)).getNewWeight());
@@ -378,6 +383,41 @@ public class PushPullSumObserver implements Control {
                     }
                 }
             }
+        }
+    }
+
+    private void initStar(Node node, int pid) {
+        // links a star graph with one central node (Node with ID 0)
+        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+        if (node.getID() == 0) {
+            for (int i = 1; i < Network.size(); i++) {
+                // node 0 is linked to all the other neighors
+                nodeProtocol.addNeighbor(Network.get(i));
+            }
+        } else {
+            // all nodes are neighbors of node 0 except node 0
+            nodeProtocol.addNeighbor(Network.get(0));
+        }
+    }
+
+    private void initChain(Node node, int pid) {
+        // links a  closed (last and first node are connected) chain (path graph)
+        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+        double nodeID = node.getID();
+
+        // draw a closed chain
+        if (nodeID == 0 && Network.size() >= 2) {
+            nodeProtocol.addNeighbor(Network.get(1));
+            nodeProtocol.addNeighbor(Network.get(Network.size() - 1));
+        } else if (nodeID > 0 && nodeID != Network.size() - 1) {
+            // adding prev. and following neighbors
+            nodeProtocol.addNeighbor(Network.get((int) nodeID + 1));
+            nodeProtocol.addNeighbor(Network.get((int) nodeID - 1));
+        } else {
+            // last node
+            nodeProtocol.addNeighbor(Network.get((int) nodeID - 1));
+            // if network is closed then the first and last nodes are connected
+            nodeProtocol.addNeighbor(Network.get(0));
         }
     }
 }
