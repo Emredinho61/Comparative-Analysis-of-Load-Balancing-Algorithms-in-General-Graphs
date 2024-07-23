@@ -1,0 +1,116 @@
+Cycle No.: 1
+MSE: 576.6099999999999
+ID 0	 load 80.0
+ID 1	 load 44.0
+ID 2	 load 82.0
+ID 3	 load 44.0
+ID 4	 load 90.0
+ID 5	 load 53.0
+ID 6	 load 43.0
+ID 7	 load 5.0
+ID 8	 load 72.0
+ID 9	 load 64.0
+Cycle No.: 2
+MSE: 174.16
+ID 0	 load 80.0
+ID 1	 load 63.0
+ID 2	 load 63.0
+ID 3	 load 67.0
+ID 4	 load 67.0
+ID 5	 load 53.0
+ID 6	 load 43.0
+ID 7	 load 38.5
+ID 8	 load 38.5
+ID 9	 load 64.0
+Cycle No.: 3
+MSE: 116.5975
+ID 0	 load 71.5
+ID 1	 load 71.5
+ID 2	 load 65.0
+ID 3	 load 65.0
+ID 4	 load 60.0
+ID 5	 load 60.0
+ID 6	 load 43.0
+ID 7	 load 38.5
+ID 8	 load 51.25
+ID 9	 load 51.25
+Cycle No.: 4
+MSE: 99.744375
+ID 0	 load 65.75
+ID 1	 load 68.25
+ID 2	 load 68.25
+ID 3	 load 65.0
+ID 4	 load 65.75
+ID 5	 load 60.0
+ID 6	 load 43.0
+ID 7	 load 44.875
+ID 8	 load 44.875
+ID 9	 load 51.25
+Cycle No.: 5
+MSE: 95.04281250000001
+ID 0	 load 67.0
+ID 1	 load 67.0
+ID 2	 load 66.625
+ID 3	 load 66.625
+ID 4	 load 62.875
+ID 5	 load 62.875
+ID 6	 load 43.9375
+ID 7	 load 43.9375
+ID 8	 load 48.0625
+ID 9	 load 48.0625
+Cycle No.: 6
+MSE: 93.33421875000002
+ID 0	 load 64.9375
+ID 1	 load 66.8125
+ID 2	 load 66.8125
+ID 3	 load 66.625
+ID 4	 load 64.9375
+ID 5	 load 62.875
+ID 6	 load 43.9375
+ID 7	 load 46.0
+ID 8	 load 46.0
+ID 9	 load 48.0625
+Cycle No.: 7
+MSE: 92.13659912109374
+ID 0	 load 65.875
+ID 1	 load 65.875
+ID 2	 load 66.71875
+ID 3	 load 65.828125
+ID 4	 load 64.3515625
+ID 5	 load 64.3515625
+ID 6	 load 44.96875
+ID 7	 load 44.96875
+ID 8	 load 47.03125
+ID 9	 load 47.03125
+Cycle No.: 8
+MSE: 91.76820007324218
+ID 0	 load 65.11328125
+ID 1	 load 65.875
+ID 2	 load 66.2734375
+ID 3	 load 66.2734375
+ID 4	 load 65.11328125
+ID 5	 load 64.3515625
+ID 6	 load 44.96875
+ID 7	 load 46.0
+ID 8	 load 46.0
+ID 9	 load 47.03125
+Cycle No.: 9
+MSE: 91.44515739440916
+ID 0	 load 65.494140625
+ID 1	 load 65.8837890625
+ID 2	 load 65.8837890625
+ID 3	 load 65.693359375
+ID 4	 load 65.0224609375
+ID 5	 load 65.0224609375
+ID 6	 load 45.484375
+ID 7	 load 45.484375
+ID 8	 load 46.515625
+ID 9	 load 46.515625
+Cycle No.: 1
+MSE: 782.4100000000001
+ID 0	 load 9.0
+ID 1	 load 92.0
+ID 2	 load 49.0
+ID 3	 load 88.0
+ID 4	 load 75.0
+ID 5	 load 52.0
