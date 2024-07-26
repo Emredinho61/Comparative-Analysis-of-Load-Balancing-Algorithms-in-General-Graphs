@@ -82,7 +82,7 @@ public class dealAgreementBasedObserver implements Control {
 
                 // For Ring of Cliques use:
                 nodeProtocol.resetNeighbors();
-                initRingOfClique(node, pid, loadBalancingParameters.m_RingSize, loadBalancingParameters.n_CliqueSize);
+                initRingOfClique(node, pid, loadBalancingParameters.m_cliqueAmount, loadBalancingParameters.n_CliqueSize);
                 // END of Ring of Clique Graoh
 
                 if (loadBalancingParameters.cycleDB == 0) {
@@ -110,7 +110,7 @@ public class dealAgreementBasedObserver implements Control {
                     writer.println(ouputLoad);
                     // If a neighbor with minimal load is found, send a fair transfer proposal
                     Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
-                    System.out.println("Neighbor of node " + node.getID() + " Nei" + nodeProtocol.getNeighbors());
+                    // System.out.println("Neighbor of node " + node.getID() + " Nei" + nodeProtocol.getNeighbors());
                     dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
                     if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
                         this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
@@ -342,23 +342,45 @@ public class dealAgreementBasedObserver implements Control {
         }
     }
 
-    private void initRingOfClique(Node node, int pid, int ringSize, int cliqueSize) {
-        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+    private void initRingOfClique(Node node, int pid, int numCliques, int cliqueSize) {
         int nodeId = (int) node.getID();
-        for (int i = 0; i < ringSize; i++) {
-            if (nodeId == 0 && Network.size() > 2) {
-                // next and last node are connected to first node
-                nodeProtocol.addNeighbor(Network.get(1));
-                nodeProtocol.addNeighbor(Network.get(ringSize - 1));
-            } else if (nodeId == ringSize - 1) {
-                // last node is connected to previous and first node
-                nodeProtocol.addNeighbor(Network.get(nodeId - 1));
-                nodeProtocol.addNeighbor(Network.get(0));
-            } else {
-                // add previous and next nodes
-                nodeProtocol.addNeighbor(Network.get(nodeId - 1));
-                nodeProtocol.addNeighbor(Network.get(nodeId + 1));
+        dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+        int cliqueIndex = nodeId / cliqueSize;
+        int posInClique = nodeId % cliqueSize;
+        // first/last nodes of cliques
+        int cliqueStartIndex = cliqueIndex * cliqueSize;
+        int cliqueEndIndex = cliqueStartIndex + cliqueSize - 1;
+
+        // clique connections
+        for (int i = cliqueStartIndex; i <= cliqueEndIndex; i++) {
+            if (i != nodeId) {
+                Node cliqueNode = Network.get(i);
+                nodeProtocol.addNeighbor(cliqueNode);
             }
+        }
+        // prev. nodes last clique to next nodes first clique
+        if (posInClique == 0) {
+            int prevCliqueIndex = (cliqueIndex - 1 + numCliques) % numCliques;
+            int prevCliqueEndIndex = prevCliqueIndex * cliqueSize + cliqueSize - 1;
+            Node prevCliqueLastNode = Network.get(prevCliqueEndIndex);
+            nodeProtocol.addNeighbor(prevCliqueLastNode);
+        }
+        // last node of clique to first node of prev. clique
+        if (posInClique == cliqueSize - 1) {
+            int nextCliqueIndex = (cliqueIndex + 1) % numCliques;
+            int nextCliqueStartIndex = nextCliqueIndex * cliqueSize;
+            Node nextCliqueFirstNode = Network.get(nextCliqueStartIndex);
+            nodeProtocol.addNeighbor(nextCliqueFirstNode);
+        }
+        // First node of the first clique connectes with last node of last clique
+        if (nodeId == 0) {
+            Node lastCliqueLastNode = Network.get((numCliques - 1) * cliqueSize + cliqueSize - 1);
+            nodeProtocol.addNeighbor(lastCliqueLastNode);
+        }
+        // Last node of last clique to first node of first clique
+        if (nodeId == (numCliques - 1) * cliqueSize + cliqueSize - 1) {
+            Node firstCliqueFirstNode = Network.get(0);
+            nodeProtocol.addNeighbor(firstCliqueFirstNode);
         }
     }
 

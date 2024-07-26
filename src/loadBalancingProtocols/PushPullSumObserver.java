@@ -47,7 +47,8 @@ public class PushPullSumObserver implements Control {
                 String outpuCycle = "Cycle No.: " + cyclePPS;
                 writer.println(outpuCycle);
             } else {
-                String outputConfig = "Config: " + Network.size() + " Closed Chain Graph";
+                String outputConfig = "Config: " + Network.size() + String.format(" Ring of Cliques %dx%d", m_cliqueAmount, n_CliqueSize);
+                // String outputConfig = "Config: " + Network.size() + " Closed Chain Graph";
                 // String outputConfig = "Config: " + Network.size() + " Star Graph";
                 // String outputConfig = "Config: " + Network.size() + String.format(" Lollipop Graph %dx%d", m_cliqueSize, n_PathSize);
                 // String outputConfig = "Config: " + Network.size() + String.format(" Grid Graph %dx%d", m_height, n_width);
@@ -94,6 +95,12 @@ public class PushPullSumObserver implements Control {
                     // ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
                     // initChain(node, pid);
                     // End of Chain
+
+                    // For Ring of Cliques
+                    ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    initRingOfClique(node, pid, m_cliqueAmount, n_CliqueSize);
+                    // End of Ring of Cliques
+
 
                     // Sum is just a random double for now.
                     // ((PushPullSumProtocol) node.getProtocol(pid)).setSum(randomNumber);
@@ -418,6 +425,48 @@ public class PushPullSumObserver implements Control {
             nodeProtocol.addNeighbor(Network.get((int) nodeID - 1));
             // if network is closed then the first and last nodes are connected
             nodeProtocol.addNeighbor(Network.get(0));
+        }
+    }
+
+    private void initRingOfClique(Node node, int pid, int numCliques, int cliqueSize) {
+        int nodeId = (int) node.getID();
+        PushPullSumProtocol nodeProtocol = (PushPullSumProtocol) node.getProtocol(pid);
+        int cliqueIndex = nodeId / cliqueSize;
+        int posInClique = nodeId % cliqueSize;
+        // first/last nodes of cliques
+        int cliqueStartIndex = cliqueIndex * cliqueSize;
+        int cliqueEndIndex = cliqueStartIndex + cliqueSize - 1;
+
+        // clique connections
+        for (int i = cliqueStartIndex; i <= cliqueEndIndex; i++) {
+            if (i != nodeId) {
+                Node cliqueNode = Network.get(i);
+                nodeProtocol.addNeighbor(cliqueNode);
+            }
+        }
+        // prev. nodes last clique to next nodes first clique
+        if (posInClique == 0) {
+            int prevCliqueIndex = (cliqueIndex - 1 + numCliques) % numCliques;
+            int prevCliqueEndIndex = prevCliqueIndex * cliqueSize + cliqueSize - 1;
+            Node prevCliqueLastNode = Network.get(prevCliqueEndIndex);
+            nodeProtocol.addNeighbor(prevCliqueLastNode);
+        }
+        // last node of clique to first node of prev. clique
+        if (posInClique == cliqueSize - 1) {
+            int nextCliqueIndex = (cliqueIndex + 1) % numCliques;
+            int nextCliqueStartIndex = nextCliqueIndex * cliqueSize;
+            Node nextCliqueFirstNode = Network.get(nextCliqueStartIndex);
+            nodeProtocol.addNeighbor(nextCliqueFirstNode);
+        }
+        // First node of the first clique connectes with last node of last clique
+        if (nodeId == 0) {
+            Node lastCliqueLastNode = Network.get((numCliques - 1) * cliqueSize + cliqueSize - 1);
+            nodeProtocol.addNeighbor(lastCliqueLastNode);
+        }
+        // Last node of last clique to first node of first clique
+        if (nodeId == (numCliques - 1) * cliqueSize + cliqueSize - 1) {
+            Node firstCliqueFirstNode = Network.get(0);
+            nodeProtocol.addNeighbor(firstCliqueFirstNode);
         }
     }
 }

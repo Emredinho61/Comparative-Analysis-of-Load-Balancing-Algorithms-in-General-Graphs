@@ -16,6 +16,6 @@ public class loadBalancingParameters {
     public static int n_PathSize = 500;
 
     // ring of clique parameter
-    public static int m_RingSize = 5;
-    public static int n_CliqueSize = 1;
+    public static int m_cliqueAmount = 10;
+    public static int n_CliqueSize = 1000;
 }
