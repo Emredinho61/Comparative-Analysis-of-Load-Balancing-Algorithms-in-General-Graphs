@@ -32,3 +32,18 @@ bin/
 # Default ignored files
 /shelf/
 /workspace.xml
+.idea/
+
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
