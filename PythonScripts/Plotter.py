@@ -53,6 +53,7 @@ class Plotter:
                             [float(oneMSE) for oneMSE in MSE_Rounds_PPS[1][0:50:1]],
                             label="PPS", color='g', linewidth=linewidth, marker='x', markersize=4)
 
+        plt.xscale('log')
         plt.yscale('log')
         plt.xlabel("Rounds", fontsize=12)
         plt.ylabel("Mean Squared Error", fontsize=12)
@@ -67,7 +68,7 @@ class Plotter:
 
 
 if __name__ == "__main__":
-    file1 = "./Plots/StarGraph/terminalOutput_DAB_10000.txt"
-    file2 = "./Plots/StarGraph/terminalOutput_PPS_10000.txt"
+    file1 = "./Plots/RingOfCliques/RingOfCliques100x100/terminalOutput_DAB_10000.txt"
+    file2 = "./Plots/RingOfCliques/RingOfCliques100x100/terminalOutput_PPS_10000.txt"
     plotter_instance = Plotter([file1, file2])
     plotter_instance.plot_MSE(file1, file2, linewidth=0.5)
