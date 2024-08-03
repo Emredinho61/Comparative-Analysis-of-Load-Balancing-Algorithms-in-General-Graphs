@@ -60,9 +60,9 @@ public class dealAgreementBasedObserver implements Control {
                 // initNeighborsFullyConnect(node, pid);
                 // End Of fully connecting
 
-                // For Grid use:
-                // nodeProtocol.resetNeighbors();
-                // initNeighborsGrid(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
+                // For Torus use:
+                nodeProtocol.resetNeighbors();
+                initNeighborsTorus(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
                 // END of Grid code
 
                 // For Lollipop Graph use:
@@ -81,8 +81,8 @@ public class dealAgreementBasedObserver implements Control {
                 // END of Star Graph
 
                 // For Ring of Cliques use:
-                nodeProtocol.resetNeighbors();
-                initRingOfClique(node, pid, loadBalancingParameters.m_cliqueAmount, loadBalancingParameters.n_CliqueSize);
+                // nodeProtocol.resetNeighbors();
+                // initRingOfClique(node, pid, loadBalancingParameters.m_cliqueAmount, loadBalancingParameters.n_CliqueSize);
                 // END of Ring of Clique Graoh
 
                 if (loadBalancingParameters.cycleDB == 0) {
@@ -110,7 +110,7 @@ public class dealAgreementBasedObserver implements Control {
                     writer.println(ouputLoad);
                     // If a neighbor with minimal load is found, send a fair transfer proposal
                     Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
-                    // System.out.println("Neighbor of node " + node.getID() + " Nei" + nodeProtocol.getNeighbors());
+                    System.out.println("Neighbor of node " + node.getID() + " Nei" + nodeProtocol.getNeighbors());
                     dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
                     if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
                         this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
@@ -246,33 +246,35 @@ public class dealAgreementBasedObserver implements Control {
         }
     }
 
-    private void initNeighborsGrid(Node node, int pid, int m_height, int n_width) {
-        // links a (m,n)-Grid with m being the height and n being the width
+    private void initNeighborsTorus(Node node, int pid, int m_height, int n_width) {
+        // links a (m,n)-Torus with m being the height and n being the width
         int nodeId = (int) node.getID();
         int row = nodeId / n_width;
         int col = nodeId % n_width;
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
+
         // Add right neighbor
-        if (col + 1 < n_width) {
-            Node neighbor = Network.get(nodeId + 1);
-            nodeProtocol.addNeighbor(neighbor);
-        }
+        int rightCol = (col + 1) % n_width;
+        System.out.println(rightCol);
+        Node rightNeighbor = Network.get(row * n_width + rightCol);
+        nodeProtocol.addNeighbor(rightNeighbor);
+
         // Add bottom neighbor
-        if (row + 1 < m_height) {
-            Node neighbor = Network.get(nodeId + n_width);
-            nodeProtocol.addNeighbor(neighbor);
-        }
+        int bottomRow = (row + 1) % m_height;
+        Node bottomNeighbor = Network.get(bottomRow * n_width + col);
+        nodeProtocol.addNeighbor(bottomNeighbor);
+
         // Add left neighbor
-        if (col - 1 >= 0) {
-            Node neighbor = Network.get(nodeId - 1);
-            nodeProtocol.addNeighbor(neighbor);
-        }
+        int leftCol = (col - 1 + n_width) % n_width;
+        Node leftNeighbor = Network.get(row * n_width + leftCol);
+        nodeProtocol.addNeighbor(leftNeighbor);
+
         // Add top neighbor
-        if (row - 1 >= 0) {
-            Node neighbor = Network.get(nodeId - n_width);
-            nodeProtocol.addNeighbor(neighbor);
-        }
+        int topRow = (row - 1 + m_height) % m_height;
+        Node topNeighbor = Network.get(topRow * n_width + col);
+        nodeProtocol.addNeighbor(topNeighbor);
     }
+
 
     private void initLollipopGraph(Node node, int pid, int m_cliqueSize, int n_pathSize) {
         // links a Lollipop Graph with cliquesize of m and pathsize of n
