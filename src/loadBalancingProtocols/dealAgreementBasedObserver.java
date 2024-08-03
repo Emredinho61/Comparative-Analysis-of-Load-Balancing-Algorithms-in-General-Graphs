@@ -61,8 +61,8 @@ public class dealAgreementBasedObserver implements Control {
                 // End Of fully connecting
 
                 // For Torus use:
-                nodeProtocol.resetNeighbors();
-                initNeighborsTorus(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
+                // nodeProtocol.resetNeighbors();
+                // initNeighborsTorus(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
                 // END of Grid code
 
                 // For Lollipop Graph use:
@@ -81,8 +81,8 @@ public class dealAgreementBasedObserver implements Control {
                 // END of Star Graph
 
                 // For Ring of Cliques use:
-                // nodeProtocol.resetNeighbors();
-                // initRingOfClique(node, pid, loadBalancingParameters.m_cliqueAmount, loadBalancingParameters.n_CliqueSize);
+                nodeProtocol.resetNeighbors();
+                initRingOfClique(node, pid, loadBalancingParameters.m_cliqueAmount, loadBalancingParameters.n_CliqueSize);
                 // END of Ring of Clique Graoh
 
                 if (loadBalancingParameters.cycleDB == 0) {
@@ -349,37 +349,42 @@ public class dealAgreementBasedObserver implements Control {
         dealAgreementBasedProtocol nodeProtocol = (dealAgreementBasedProtocol) node.getProtocol(pid);
         int cliqueIndex = nodeId / cliqueSize;
         int posInClique = nodeId % cliqueSize;
+
         // first/last nodes of cliques
         int cliqueStartIndex = cliqueIndex * cliqueSize;
         int cliqueEndIndex = cliqueStartIndex + cliqueSize - 1;
 
-        // clique connections
+        // Clique connections excluding the bridge nodes within the same clique
         for (int i = cliqueStartIndex; i <= cliqueEndIndex; i++) {
-            if (i != nodeId) {
+            if (i != nodeId && !(posInClique == 0 && i == cliqueEndIndex) && !(posInClique == cliqueSize - 1 && i == cliqueStartIndex)) {
                 Node cliqueNode = Network.get(i);
                 nodeProtocol.addNeighbor(cliqueNode);
             }
         }
-        // prev. nodes last clique to next nodes first clique
+
+        // Connect first node of current clique to the last node of the previous clique
         if (posInClique == 0) {
             int prevCliqueIndex = (cliqueIndex - 1 + numCliques) % numCliques;
             int prevCliqueEndIndex = prevCliqueIndex * cliqueSize + cliqueSize - 1;
             Node prevCliqueLastNode = Network.get(prevCliqueEndIndex);
             nodeProtocol.addNeighbor(prevCliqueLastNode);
         }
-        // last node of clique to first node of prev. clique
+
+        // Connect last node of current clique to the first node of the next clique
         if (posInClique == cliqueSize - 1) {
             int nextCliqueIndex = (cliqueIndex + 1) % numCliques;
             int nextCliqueStartIndex = nextCliqueIndex * cliqueSize;
             Node nextCliqueFirstNode = Network.get(nextCliqueStartIndex);
             nodeProtocol.addNeighbor(nextCliqueFirstNode);
         }
-        // First node of the first clique connectes with last node of last clique
+
+        // Ensure first node of the first clique connects with the last node of the last clique
         if (nodeId == 0) {
             Node lastCliqueLastNode = Network.get((numCliques - 1) * cliqueSize + cliqueSize - 1);
             nodeProtocol.addNeighbor(lastCliqueLastNode);
         }
-        // Last node of last clique to first node of first clique
+
+        // Ensure last node of the last clique connects with the first node of the first clique
         if (nodeId == (numCliques - 1) * cliqueSize + cliqueSize - 1) {
             Node firstCliqueFirstNode = Network.get(0);
             nodeProtocol.addNeighbor(firstCliqueFirstNode);
