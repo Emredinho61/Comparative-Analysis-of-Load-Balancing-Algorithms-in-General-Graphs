@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import re
 import math
-
+from matplotlib.ticker import FuncFormatter
 
 class Plotter:
     def __init__(self, files: list):
@@ -31,9 +31,11 @@ class Plotter:
             print(f"An exception occurred while opening the file {e}")
 
     def abbreviate_networktype(self):
-        abbreviaion = [oneWord[0] for oneWord in self.networktype.split(" ")]
-        abbreviaion_string = "".join(abbreviaion)
-        return abbreviaion_string
+        abbreviation = [
+            word[0] for word in self.networktype.split() if not any(char.isdigit() for char in word)
+        ]
+        abbreviation_string = "".join(abbreviation)
+        return abbreviation_string
 
     def plot_MSE(self, filepath_DAB: str, filepath_PPS: str, linewidth=1.0):
         MSE_Rounds_DAB = self.MSE_per_Round(filepath_DAB)
@@ -53,8 +55,15 @@ class Plotter:
                             [float(oneMSE) for oneMSE in MSE_Rounds_PPS[1][0:50:1]],
                             label="PPS", color='g', linewidth=linewidth, marker='x', markersize=4)
 
-        plt.xscale('log')
-        plt.yscale('log')
+        plt.loglog()
+
+        def log_tick_formatter(val, pos):
+            return f'{val:g}'
+
+        plt.xticks([1, 2, 5, 10, 20, 50])
+        # Apply the formatter to both axes
+        plt.gca().xaxis.set_major_formatter(FuncFormatter(log_tick_formatter))
+        plt.gca().yaxis.set_major_formatter(FuncFormatter(log_tick_formatter))
         plt.xlabel("Rounds", fontsize=12)
         plt.ylabel("Mean Squared Error", fontsize=12)
         plt.title(f"Network Size {self.networksize} {self.networktype}", fontsize=14)
@@ -68,7 +77,7 @@ class Plotter:
 
 
 if __name__ == "__main__":
-    file1 = "./Plots/RingOfCliques/RingOfCliques100x100/terminalOutput_DAB_10000.txt"
-    file2 = "./Plots/RingOfCliques/RingOfCliques100x100/terminalOutput_PPS_10000.txt"
+    file1 = "../simulationResults/TorusGraph/terminalOutput_DAB_16.txt"
+    file2 = "../simulationResults/TorusGraph/terminalOutput_PPS_16.txt"
     plotter_instance = Plotter([file1, file2])
     plotter_instance.plot_MSE(file1, file2, linewidth=0.5)
