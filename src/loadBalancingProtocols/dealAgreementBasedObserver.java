@@ -61,8 +61,8 @@ public class dealAgreementBasedObserver implements Control {
                 // End Of fully connecting
 
                 // For Torus use:
-                // nodeProtocol.resetNeighbors();
-                // initNeighborsTorus(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
+                nodeProtocol.resetNeighbors();
+                initNeighborsTorus(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
                 // END of Grid code
 
                 // For Lollipop Graph use:
@@ -75,14 +75,14 @@ public class dealAgreementBasedObserver implements Control {
                 // initStar(node, pid);
                 // END of Star Graph
 
-                // For Star Graph implementation:
+                // For Chain Graph implementation:
                 // nodeProtocol.resetNeighbors();
                 // initChain(node, pid);
                 // END of Star Graph
 
                 // For Ring of Cliques use:
-                nodeProtocol.resetNeighbors();
-                initRingOfClique(node, pid, loadBalancingParameters.m_cliqueAmount, loadBalancingParameters.n_CliqueSize);
+                // nodeProtocol.resetNeighbors();
+                // initRingOfClique(node, pid, loadBalancingParameters.m_cliqueAmount, loadBalancingParameters.n_CliqueSize);
                 // END of Ring of Clique Graoh
 
                 if (loadBalancingParameters.cycleDB == 0) {
@@ -110,7 +110,7 @@ public class dealAgreementBasedObserver implements Control {
                     writer.println(ouputLoad);
                     // If a neighbor with minimal load is found, send a fair transfer proposal
                     Node minLoadNeighborofNode = findMinLoadNeighbor(node, pid);
-                    System.out.println("Neighbor of node " + node.getID() + " Nei" + nodeProtocol.getNeighbors());
+                    // System.out.println("Neighbor of node " + node.getID() + " Nei" + nodeProtocol.getNeighbors());
                     dealAgreementBasedProtocol minLoadNeighborofNodeProtocol = (dealAgreementBasedProtocol) minLoadNeighborofNode.getProtocol(pid);
                     if ((nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) > 0) {
                         this.transferProposal = (nodeProtocol.getLoad() - minLoadNeighborofNodeProtocol.getLoad()) / 2;
@@ -255,7 +255,6 @@ public class dealAgreementBasedObserver implements Control {
 
         // Add right neighbor
         int rightCol = (col + 1) % n_width;
-        System.out.println(rightCol);
         Node rightNeighbor = Network.get(row * n_width + rightCol);
         nodeProtocol.addNeighbor(rightNeighbor);
 

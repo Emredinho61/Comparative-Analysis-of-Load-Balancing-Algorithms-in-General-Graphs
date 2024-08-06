@@ -46,11 +46,11 @@ public class PushPullSumObserver implements Control {
                 String outpuCycle = "Cycle No.: " + cyclePPS;
                 writer.println(outpuCycle);
             } else {
-                String outputConfig = "Config: " + Network.size() + String.format(" Ring of Cliques %dx%d", m_cliqueAmount, n_CliqueSize);
+                // String outputConfig = "Config: " + Network.size() + String.format(" Ring of Cliques %dx%d", m_cliqueAmount, n_CliqueSize);
                 // String outputConfig = "Config: " + Network.size() + " Closed Chain Graph";
                 // String outputConfig = "Config: " + Network.size() + " Star Graph";
                 // String outputConfig = "Config: " + Network.size() + String.format(" Lollipop Graph (%d, %d)", m_cliqueSize, n_PathSize);
-                // String outputConfig = "Config: " + Network.size() + String.format(" Torus Graph %dx%d", m_height, n_width);
+                String outputConfig = "Config: " + Network.size() + String.format(" Torus Graph %dx%d", m_height, n_width);
                 // String outputConfig = "Config: " + Network.size() + " Fully Connected Graph";
                 writer.println(outputConfig);
             }
@@ -76,8 +76,8 @@ public class PushPullSumObserver implements Control {
                     // End Of Fully Connected
 
                     // For Torus:
-                    // ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
-                    // initNeighborsTorus(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
+                    ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    initNeighborsTorus(node, pid, loadBalancingParameters.m_height, loadBalancingParameters.n_width);
                     // End of Grid
 
                     // For Lollipop Graph Use:
@@ -96,8 +96,8 @@ public class PushPullSumObserver implements Control {
                     // End of Chain
 
                     // For Ring of Cliques
-                    ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
-                    initRingOfClique(node, pid, m_cliqueAmount, n_CliqueSize);
+                    // ((PushPullSumProtocol) node.getProtocol(pid)).resetReceivedNodes();
+                    // initRingOfClique(node, pid, m_cliqueAmount, n_CliqueSize);
                     // End of Ring of Cliques
 
 
@@ -133,7 +133,7 @@ public class PushPullSumObserver implements Control {
                     System.out.println(outputSumWeight);
 
                 } else {
-                    System.out.println("Node " + node.getID() + " Neighbor " + ((PushPullSumProtocol) node.getProtocol(pid)).getReceivedNodes());
+                    // System.out.println("Node " + node.getID() + " Neighbor " + ((PushPullSumProtocol) node.getProtocol(pid)).getReceivedNodes());
                     ((PushPullSumProtocol) node.getProtocol(pid)).setPushSum(((PushPullSumProtocol) node.getProtocol(pid)).getSum() / 2);
                     ((PushPullSumProtocol) node.getProtocol(pid)).setPushWeight(((PushPullSumProtocol) node.getProtocol(pid)).getWeight() / 2);
                     // System.out.println("PushSum " + ((PushPullSumProtocol) node.getProtocol(pid)).getPushSum() + " PushWeight " + ((PushPullSumProtocol) node.getProtocol(pid)).getPushWeight());
@@ -341,7 +341,6 @@ public class PushPullSumObserver implements Control {
 
         // Add right neighbor
         int rightCol = (col + 1) % n_width;
-        System.out.println(rightCol);
         Node rightNeighbor = Network.get(row * n_width + rightCol);
         nodeProtocol.addNeighbor(rightNeighbor);
 

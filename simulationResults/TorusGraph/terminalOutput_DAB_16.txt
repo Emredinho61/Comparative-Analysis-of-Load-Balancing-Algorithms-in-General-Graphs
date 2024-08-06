@@ -1,0 +1,882 @@
+Cycle No.: 1
+MSE: 673.77734375
+ID 0	 load 59.0
+ID 1	 load 59.0
+ID 2	 load 53.0
+ID 3	 load 43.0
+ID 4	 load 35.0
+ID 5	 load 15.0
+ID 6	 load 86.0
+ID 7	 load 87.0
+ID 8	 load 97.0
+ID 9	 load 27.0
+ID 10	 load 85.0
+ID 11	 load 9.0
+ID 12	 load 43.0
+ID 13	 load 32.0
+ID 14	 load 34.0
+ID 15	 load 65.0
+Cycle No.: 2
+MSE: 238.48828125
+ID 0	 load 47.0
+ID 1	 load 59.0
+ID 2	 load 43.5
+ID 3	 load 43.0
+ID 4	 load 47.0
+ID 5	 load 50.5
+ID 6	 load 50.5
+ID 7	 load 87.0
+ID 8	 load 53.0
+ID 9	 load 29.5
+ID 10	 load 85.0
+ID 11	 load 53.0
+ID 12	 load 36.25
+ID 13	 load 36.25
+ID 14	 load 43.5
+ID 15	 load 65.0
+Cycle No.: 3
+MSE: 38.1953125
+ID 0	 load 47.0
+ID 1	 load 47.625
+ID 2	 load 47.0
+ID 3	 load 65.0
+ID 4	 load 47.0
+ID 5	 load 50.5
+ID 6	 load 47.0
+ID 7	 load 65.0
+ID 8	 load 53.0
+ID 9	 load 57.25
+ID 10	 load 57.25
+ID 11	 load 53.0
+ID 12	 load 50.625
+ID 13	 load 47.625
+ID 14	 load 43.5
+ID 15	 load 50.625
+Cycle No.: 4
+MSE: 8.9658203125
+ID 0	 load 56.0
+ID 1	 load 47.625
+ID 2	 load 47.0
+ID 3	 load 56.0
+ID 4	 load 56.0
+ID 5	 load 50.5
+ID 6	 load 47.0
+ID 7	 load 56.0
+ID 8	 load 53.0
+ID 9	 load 52.4375
+ID 10	 load 50.375
+ID 11	 load 51.8125
+ID 12	 load 50.625
+ID 13	 load 52.4375
+ID 14	 load 50.375
+ID 15	 load 51.8125
+Cycle No.: 5
+MSE: 0.392333984375
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.5
+ID 3	 load 51.5
+ID 4	 load 53.25
+ID 5	 load 53.25
+ID 6	 load 51.5
+ID 7	 load 51.5
+ID 8	 load 51.8125
+ID 9	 load 51.40625
+ID 10	 load 51.40625
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 52.4375
+ID 14	 load 51.09375
+ID 15	 load 51.09375
+Cycle No.: 6
+MSE: 0.1114501953125
+ID 0	 load 51.65625
+ID 1	 load 51.65625
+ID 2	 load 51.65625
+ID 3	 load 51.65625
+ID 4	 load 52.375
+ID 5	 load 52.328125
+ID 6	 load 51.453125
+ID 7	 load 52.375
+ID 8	 load 51.8125
+ID 9	 load 52.328125
+ID 10	 load 51.453125
+ID 11	 load 51.453125
+ID 12	 load 51.8125
+ID 13	 load 51.765625
+ID 14	 load 51.765625
+ID 15	 load 51.453125
+Cycle No.: 7
+MSE: 0.036376953125
+ID 0	 load 52.015625
+ID 1	 load 51.7109375
+ID 2	 load 51.65625
+ID 3	 load 51.65625
+ID 4	 load 52.015625
+ID 5	 load 52.328125
+ID 6	 load 51.9140625
+ID 7	 load 51.9140625
+ID 8	 load 51.6328125
+ID 9	 load 51.890625
+ID 10	 load 51.890625
+ID 11	 load 51.6328125
+ID 12	 load 51.6328125
+ID 13	 load 51.7109375
+ID 14	 load 51.765625
+ID 15	 load 51.6328125
+Cycle No.: 8
+MSE: 0.010213851928710938
+ID 0	 load 51.82421875
+ID 1	 load 52.01953125
+ID 2	 load 51.78515625
+ID 3	 load 51.65625
+ID 4	 load 51.82421875
+ID 5	 load 52.01953125
+ID 6	 load 51.78515625
+ID 7	 load 51.7734375
+ID 8	 load 51.82421875
+ID 9	 load 51.890625
+ID 10	 load 51.890625
+ID 11	 load 51.7734375
+ID 12	 load 51.82421875
+ID 13	 load 51.7109375
+ID 14	 load 51.69921875
+ID 15	 load 51.69921875
+Cycle No.: 9
+MSE: 0.002845287322998047
+ID 0	 load 51.740234375
+ID 1	 load 51.865234375
+ID 2	 load 51.78515625
+ID 3	 load 51.740234375
+ID 4	 load 51.798828125
+ID 5	 load 51.90234375
+ID 6	 load 51.90234375
+ID 7	 load 51.798828125
+ID 8	 load 51.798828125
+ID 9	 load 51.890625
+ID 10	 load 51.794921875
+ID 11	 load 51.798828125
+ID 12	 load 51.76171875
+ID 13	 load 51.865234375
+ID 14	 load 51.794921875
+ID 15	 load 51.76171875
+Cycle No.: 10
+MSE: 8.215904235839844E-4
+ID 0	 load 51.802734375
+ID 1	 load 51.802734375
+ID 2	 load 51.84375
+ID 3	 load 51.76953125
+ID 4	 load 51.8505859375
+ID 5	 load 51.8505859375
+ID 6	 load 51.84375
+ID 7	 load 51.76953125
+ID 8	 load 51.798828125
+ID 9	 load 51.8427734375
+ID 10	 load 51.8427734375
+ID 11	 load 51.7802734375
+ID 12	 load 51.8134765625
+ID 13	 load 51.8134765625
+ID 14	 load 51.794921875
+ID 15	 load 51.7802734375
+Cycle No.: 11
+MSE: 1.4495849609375E-4
+ID 0	 load 51.802734375
+ID 1	 load 51.82666015625
+ID 2	 load 51.806640625
+ID 3	 load 51.806640625
+ID 4	 load 51.81005859375
+ID 5	 load 51.82666015625
+ID 6	 load 51.84375
+ID 7	 load 51.81005859375
+ID 8	 load 51.82080078125
+ID 9	 load 51.82080078125
+ID 10	 load 51.8115234375
+ID 11	 load 51.8115234375
+ID 12	 load 51.796875
+ID 13	 load 51.80419921875
+ID 14	 load 51.80419921875
+ID 15	 load 51.796875
+Cycle No.: 12
+MSE: 4.017353057861328E-5
+ID 0	 load 51.814697265625
+ID 1	 load 51.814697265625
+ID 2	 load 51.8251953125
+ID 3	 load 51.808349609375
+ID 4	 load 51.818359375
+ID 5	 load 51.818359375
+ID 6	 load 51.8251953125
+ID 7	 load 51.808349609375
+ID 8	 load 51.808837890625
+ID 9	 load 51.8125
+ID 10	 load 51.807861328125
+ID 11	 load 51.80419921875
+ID 12	 load 51.808837890625
+ID 13	 load 51.8125
+ID 14	 load 51.807861328125
+ID 15	 load 51.80419921875
+Cycle No.: 13
+MSE: 1.4435499906539917E-5
+ID 0	 load 51.8115234375
+ID 1	 load 51.8135986328125
+ID 2	 load 51.8165283203125
+ID 3	 load 51.8115234375
+ID 4	 load 51.8133544921875
+ID 5	 load 51.8154296875
+ID 6	 load 51.8165283203125
+ID 7	 load 51.8133544921875
+ID 8	 load 51.8065185546875
+ID 9	 load 51.8154296875
+ID 10	 load 51.8165283203125
+ID 11	 load 51.8065185546875
+ID 12	 load 51.8065185546875
+ID 13	 load 51.8135986328125
+ID 14	 load 51.8165283203125
+ID 15	 load 51.8065185546875
+Cycle No.: 14
+MSE: 2.7585774660110474E-6
+ID 0	 load 51.81256103515625
+ID 1	 load 51.81256103515625
+ID 2	 load 51.81402587890625
+ID 3	 load 51.81402587890625
+ID 4	 load 51.81439208984375
+ID 5	 load 51.81439208984375
+ID 6	 load 51.81494140625
+ID 7	 load 51.81494140625
+ID 8	 load 51.81097412109375
+ID 9	 load 51.81097412109375
+ID 10	 load 51.8115234375
+ID 11	 load 51.8115234375
+ID 12	 load 51.81005859375
+ID 13	 load 51.81005859375
+ID 14	 load 51.8115234375
+ID 15	 load 51.8115234375
+Cycle No.: 15
+MSE: 5.154870450496674E-7
+ID 0	 load 51.811309814453125
+ID 1	 load 51.811309814453125
+ID 2	 load 51.812774658203125
+ID 3	 load 51.812774658203125
+ID 4	 load 51.81268310546875
+ID 5	 load 51.81268310546875
+ID 6	 load 51.813232421875
+ID 7	 load 51.813232421875
+ID 8	 load 51.81268310546875
+ID 9	 load 51.81268310546875
+ID 10	 load 51.813232421875
+ID 11	 load 51.813232421875
+ID 12	 load 51.811309814453125
+ID 13	 load 51.811309814453125
+ID 14	 load 51.812774658203125
+ID 15	 load 51.812774658203125
+Cycle No.: 16
+MSE: 2.0954757928848267E-7
+ID 0	 load 51.812042236328125
+ID 1	 load 51.812042236328125
+ID 2	 load 51.812042236328125
+ID 3	 load 51.812042236328125
+ID 4	 load 51.812957763671875
+ID 5	 load 51.812957763671875
+ID 6	 load 51.812957763671875
+ID 7	 load 51.812957763671875
+ID 8	 load 51.812957763671875
+ID 9	 load 51.812957763671875
+ID 10	 load 51.812957763671875
+ID 11	 load 51.812957763671875
+ID 12	 load 51.812042236328125
+ID 13	 load 51.812042236328125
+ID 14	 load 51.812042236328125
+ID 15	 load 51.812042236328125
+Cycle No.: 17
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 18
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 19
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 20
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 21
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 22
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 23
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 24
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 25
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 26
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 27
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 28
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 29
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 30
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 31
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 32
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 33
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 34
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 35
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 36
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 37
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 38
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 39
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 40
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 41
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 42
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 43
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 44
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 45
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 46
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 47
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 48
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
+Cycle No.: 49
+MSE: 0.0
+ID 0	 load 51.8125
+ID 1	 load 51.8125
+ID 2	 load 51.8125
+ID 3	 load 51.8125
+ID 4	 load 51.8125
+ID 5	 load 51.8125
+ID 6	 load 51.8125
+ID 7	 load 51.8125
+ID 8	 load 51.8125
+ID 9	 load 51.8125
+ID 10	 load 51.8125
+ID 11	 load 51.8125
+ID 12	 load 51.8125
+ID 13	 load 51.8125
+ID 14	 load 51.8125
+ID 15	 load 51.8125
