@@ -15,7 +15,7 @@ class Plotter:
         try:
             with open(filepath, 'rt') as file:
                 for one_line in file:
-                    regex = r"(Cycle No.: )([\d]*)|(MSE: )([\d|.|E\-\d]*)|(Config: )([\w| ]*)"
+                    regex = r"(Cycle No.: )([\d]*)|(MSE: )([\d|.|E\-\d]*)|(Config: )([\w| |\(,\)]*)"
                     matches = re.finditer(regex, one_line, re.MULTILINE)
                     for match in matches:
                         if match.groups()[1] is not None:
